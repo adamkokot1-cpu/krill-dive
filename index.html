@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Krill Dive: wieloosobowy quiz o rzadkich odpowiedziach dla 4 graczy.">
+<meta name="description" content="Krill Dive: wieloosobowy quiz o rzadkich odpowiedziach dla 2-8 graczy.">
 <title>Krill Dive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -120,6 +120,39 @@ label{display:block;margin-bottom:6px}
 @keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 .window input.bad{border-color:#ff7a66}
 .window input.near{border-color:var(--kelp)}
+/* POJEDYNKI */
+.bktree{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(120px,1fr);gap:10px;overflow-x:auto;padding-bottom:4px}
+.bkcol{display:grid;gap:8px;align-content:space-around}
+.bkcol h4{margin:0;font:800 12px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.bkm{display:grid;gap:3px;padding:8px;border-radius:12px;border:1.5px solid var(--line);background:rgba(4,22,43,.7);font-size:13px}
+.bkm.cur{border-color:var(--t-m);box-shadow:0 0 0 1px var(--t-m)}
+.bkm div{display:flex;justify-content:space-between;gap:6px;min-width:0}
+.bkm span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bkm .w{color:var(--kelp);font-weight:700}
+.bkm .l{color:var(--muted);text-decoration:line-through}
+.pn.spec{opacity:.45}
+/* LICYTACJA */
+.bidbox{display:grid;gap:12px;justify-items:center;text-align:center;max-width:430px;margin:0 auto 12px}
+.stepper{display:flex;align-items:center;gap:16px}
+.stepper button{width:52px;height:52px;border-radius:50%;border:2px solid var(--line);background:rgba(255,255,255,.07);font:800 26px/1 var(--f-display)}
+.stepper button:disabled{opacity:.4}
+.stepper b{font:800 56px/1 var(--f-mono);min-width:2.2ch}
+/* SONAR */
+.sonar-ans{margin:0 auto 14px;max-width:430px;text-align:center;padding:16px;border-radius:20px;border:2px solid var(--kelp);background:rgba(4,22,43,.78);position:relative;overflow:hidden}
+.sonar-ans::before{content:"";position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;border-radius:50%;border:2px solid rgba(46,230,197,.25);transform:translate(-50%,-50%) scale(.2);animation:ping 3.2s ease-out infinite}
+.sonar-ans::after{content:"";position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;border-radius:50%;border:2px solid rgba(46,230,197,.18);transform:translate(-50%,-50%) scale(.2);animation:ping 3.2s ease-out 1.6s infinite}
+@keyframes ping{to{transform:translate(-50%,-50%) scale(1);opacity:0}}
+.sonar-ans .label{position:relative}
+.sonar-ans b{position:relative;display:block;margin-top:6px;font:800 clamp(28px,8vw,44px)/1.05 var(--f-display);color:var(--foam)}
+.tierpick{display:grid;gap:8px;max-width:430px;margin:0 auto}
+.tierpick .btn{--c:var(--t-z);display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;text-align:left;border-color:color-mix(in srgb,var(--c) 55%,transparent);background:color-mix(in srgb,var(--c) 12%,rgba(4,22,43,.7));padding:13px 18px}
+.tierpick .btn b{color:var(--c);font-size:17px}
+.tierpick .btn small{font:700 12px/1 var(--f-mono);color:var(--muted)}
+.tierpick .btn[aria-pressed=true]{background:color-mix(in srgb,var(--c) 32%,rgba(4,22,43,.7));border-color:var(--c);box-shadow:0 0 0 2px var(--c)}
+.gline{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.gline:last-child{border-bottom:none}
+.gline .nm{font:700 15px/1.1 var(--f-display);min-width:0;flex:1}
+.gline .av{width:26px;height:30px}
 /* TELETURNIEJ */
 .thr{--c:var(--t-s);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 12px;margin:0 auto 12px;padding:10px 14px;border:2px solid var(--c);border-radius:16px;background:color-mix(in srgb,var(--c) 12%,rgba(4,22,43,.7));text-align:center;max-width:430px}
 .thr b{font:800 28px/1 var(--f-display);color:var(--c)}
@@ -128,6 +161,12 @@ label{display:block;margin-bottom:6px}
 .hearts svg{width:15px;height:15px;display:block}
 .hearts .on{fill:var(--coral)}
 .hearts .off{fill:none;stroke:rgba(255,255,255,.3);stroke-width:2}
+body.many .pn{width:74px}
+body.many .pn .nm{font-size:11px;max-width:74px}
+body.many .pn .av{width:40px;height:46px}
+body.many .pn .bub{font-size:11px;padding:3px 6px;min-width:30px}
+body.many .water{height:clamp(200px,34vh,300px)}
+body.many .col .ans{font-size:11px;min-height:56px}
 .pn.dead{opacity:.35;filter:grayscale(1)}
 .pn.target .nm{color:var(--kelp)}
 .pn.target .av{filter:drop-shadow(0 0 12px rgba(46,230,197,.9))}
@@ -334,6 +373,8 @@ label{display:block;margin-bottom:6px}
       <div class="setting"><span class="label">Tryb gry</span><div class="chips" id="set-mode"></div><p class="modedesc" id="mode-desc"></p></div>
       <div class="setting"><span class="label" id="lbl-rounds">Liczba pytań</span><div class="chips" id="set-rounds"></div></div>
       <div class="setting"><span class="label" id="lbl-time">Czas na odpowiedź (s)</span><div class="chips" id="set-time"></div></div>
+      <div class="setting" id="row-wins" hidden><span class="label">Wygrane rundy w pojedynku</span><div class="chips" id="set-wins"></div></div>
+      <div class="setting"><span class="label">Maksymalna liczba graczy</span><div class="chips" id="set-maxp"></div></div>
       <div class="setting" id="row-hearts" hidden><span class="label">Liczba serc na gracza</span><div class="chips" id="set-hearts"></div></div>
       <p class="muted mt" id="lobby-note" style="font-size:14px"></p>
     </div>
@@ -347,6 +388,7 @@ label{display:block;margin-bottom:6px}
   <section id="s-play" hidden>
     <div class="hud"><span class="rnd" id="rnd"></span><span class="codechip" id="code-mini"></span></div>
     <div class="qcard"><p class="label" style="margin-bottom:10px">Pytanie</p><h2 id="qtext"></h2></div>
+    <div class="thr" id="thr-p" hidden></div>
     <div class="window">
       <form id="ansform" autocomplete="off">
         <input type="text" id="ans" maxlength="40" placeholder="Wpisz odpowiedź…" aria-label="Twoja odpowiedź" enterkeyhint="send">
@@ -356,6 +398,64 @@ label{display:block;margin-bottom:6px}
       </form>
     </div>
     <div class="ring" id="ring"></div>
+  </section>
+
+  <!-- PUCHAR -->
+  <section id="s-bracket" hidden>
+    <div class="hud"><span class="rnd">Puchar</span><span class="codechip" id="bk-code"></span></div>
+    <div class="card boom-card" id="bk-now"></div>
+    <div class="card details" id="bk-wrap" style="margin-top:14px"><h3>Drabinka</h3><div class="bktree" id="bk-tree"></div></div>
+    <div class="next-row">
+      <div class="bar" aria-hidden="true"><i id="bk-bar"></i></div>
+      <div class="actions"><span class="muted" id="bk-note" style="align-self:center"></span>
+      <button class="btn primary" id="bk-next" type="button">Start pojedynku →</button></div>
+    </div>
+  </section>
+
+  <!-- LICYTACJA -->
+  <section id="s-bid" hidden>
+    <div class="hud"><span class="rnd" id="ld-rnd"></span><span class="codechip" id="ld-code"></span></div>
+    <div class="qcard"><p class="label" style="margin-bottom:10px">Licytacja: ile odpowiedzi podasz?</p><h2 id="ld-q"></h2></div>
+    <div class="card bidbox" id="ld-box" hidden></div>
+    <div class="window" id="ld-win" hidden>
+      <form id="ld-form" autocomplete="off">
+        <input type="text" id="ld-ans" maxlength="40" placeholder="Kolejna odpowiedź…" aria-label="Twoja odpowiedź" enterkeyhint="send">
+        <button class="btn primary" id="ld-send" type="submit">Dodaj</button>
+        <p class="hint" id="ld-hint" aria-live="polite"></p>
+      </form>
+    </div>
+    <p class="qinfo" id="ld-info"></p>
+    <div class="card" id="ld-got" hidden></div>
+    <div class="ring arena" id="ld-arena"><div class="tmr" id="ld-tmr"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" cx="50" cy="50" r="44" stroke-dasharray="276.5" stroke-dashoffset="0" fill="none"/></svg><b id="ld-tnum"></b></div></div>
+    <div id="ld-res" class="stack" style="margin-top:14px" hidden>
+      <div class="card boom-card" id="ld-rescard"></div>
+      <div class="card details" id="ld-tiers"></div>
+      <div class="next-row">
+        <div class="bar" aria-hidden="true"><i id="ld-nextbar"></i></div>
+        <div class="actions"><span class="muted" id="ld-note" style="align-self:center"></span>
+        <button class="btn primary" id="ld-next" type="button">Dalej</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SONAR -->
+  <section id="s-sonar" hidden>
+    <div class="hud"><span class="rnd" id="rnd-s"></span><span class="codechip" id="code-s"></span></div>
+    <div class="qcard"><p class="label" style="margin-bottom:10px">Sonar: na jakim poziomie jest ta odpowiedź?</p><h2 id="qtext-s"></h2></div>
+    <div class="sonar-ans"><span class="label">Odpowiedź</span><b id="sonar-a"></b></div>
+    <div class="tierpick" id="tierpick"></div>
+    <p class="qinfo" id="sinfo"></p>
+    <div class="ring arena" id="sarena"><div class="tmr" id="stmr"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" cx="50" cy="50" r="44" stroke-dasharray="276.5" stroke-dashoffset="0" fill="none"/></svg><b id="stnum"></b></div></div>
+    <div id="sresult" class="stack" style="margin-top:14px" hidden>
+      <div class="card boom-card" id="srescard"></div>
+      <div class="card details" id="sdetails"></div>
+      <div class="card details" id="stiers"></div>
+      <div class="next-row">
+        <div class="bar" aria-hidden="true"><i id="snextbar"></i></div>
+        <div class="actions"><span class="muted" id="snext-note" style="align-self:center"></span>
+        <button class="btn primary" id="snext" type="button">Dalej</button></div>
+      </div>
+    </div>
   </section>
 
   <!-- TELETURNIEJ -->
@@ -2728,7 +2828,7 @@ const TIERS = [
 const TIER = Object.fromEntries(TIERS.map(t => [t.id, t]));
 const M_PER_PT = 109.35;           // 100 pkt = 10 935 m (Challenger Deep)
 const MAX_DEPTH = 10935;
-const PCOL = ['#ff6f59', '#ffc857', '#2ee6c5', '#a78bfa'];
+const PCOL = ['#ff6f59', '#ffc857', '#2ee6c5', '#a78bfa', '#ff8fb8', '#7fb0ff', '#9be564', '#ff9d4a'];
 
 function norm(s) {
   return String(s).toLowerCase().replace(/ł/g, 'l').replace(/ı/g, 'i').replace(/ø/g, 'o').replace(/đ/g, 'd').replace(/ß/g, 'ss').replace(/æ/g, 'ae')
@@ -2813,7 +2913,7 @@ function matchEx(q, raw) {
   }
   return null;
 }
-function tierEntries(q, t) { return q[t].split('|').filter(Boolean).map(firstAlias); }
+function tierEntries(q, t) { return (q[t] || '').split('|').filter(Boolean).map(firstAlias); }
 function zoneOf(m) {
   if (m < 200) return 'strefa epipelagiczna (pełne światło)';
   if (m < 1000) return 'strefa mezopelagiczna (zmierzch)';
@@ -2861,7 +2961,7 @@ const DIVER = '<svg viewBox="0 0 60 72" aria-hidden="true">' +
   '<circle cx="32" cy="22" r="16" fill="#e9eef2" stroke="var(--pc)" stroke-width="3"/>' +
   '<rect x="22" y="14" width="20" height="14" rx="7" fill="#08233d"/>' +
   '<path d="M26 18q4-3 8-1" stroke="#7fe3f2" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
-function avatar(ci) { const s = h('span', { class: 'av', style: '--pc:' + PCOL[ci % 4] }); s.innerHTML = DIVER; return s; }
+function avatar(ci) { const s = h('span', { class: 'av', style: '--pc:' + PCOL[ci % PCOL.length] }); s.innerHTML = DIVER; return s; }
 let toastT;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 3600); }
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2950,14 +3050,14 @@ function toHome(msg) { teardown(); view = 'home'; render(); if (msg) toast(msg);
    ============================================================ */
 function addPlayer(id, name, bot, peer) {
   const used = new Set(G.players.map(p => p.col));
-  const col = [0, 1, 2, 3].find(c => !used.has(c));
+  const col = [0, 1, 2, 3, 4, 5, 6, 7].find(c => !used.has(c));
   let nm = cleanName(name), k = 2; const base = nm;
   while (G.players.some(p => p.name === nm)) nm = base.slice(0, 11) + ' ' + (k++);
   G.players.push({ id, name: nm, col, bot, peer, lives: 0, elim: -1, booms: 0, total: 0, ans: null, sub: false, gone: false, seen: Date.now(), again: false });
 }
 function hostCreate(name) {
   const code = CODE;
-  G = { code, ph: 'lobby', mode: 'd', hearts: 3, chooser: null, target: null, thr: 10, x2: false, tt: 0, ra: null, lastCh: null, ansIn: false, botAns: null, holder: null, used: [], passes: 0, xo: null, botAt: 0, rounds: 8, time: 30, players: [], qs: [], qi: -1, tEnd: 0, nextAt: 0, hostPid: ME.pid, res: null, deep: '', ex: [], best: null };
+  G = { code, ph: 'lobby', mode: 'd', maxP: 4, wins: 2, bk: null, cur: null, duel: null, rn: [], dn: '', bids: {}, bidOrder: [], bidder: null, need: 0, got: [], lres: null, mb: 8, botCan: false, sa: '', sotier: '', sg: {}, sres: null, hearts: 3, chooser: null, target: null, thr: 10, x2: false, tt: 0, ra: null, lastCh: null, ansIn: false, botAns: null, holder: null, used: [], passes: 0, xo: null, botAt: 0, rounds: 8, time: 30, players: [], qs: [], qi: -1, tEnd: 0, nextAt: 0, hostPid: ME.pid, res: null, deep: '', ex: [], best: null };
   addPlayer(ME.pid, name, false, null);
   isHost = true;
 }
@@ -2967,10 +3067,17 @@ function pub() {
   return {
     c: G.code, ph: G.ph, R: G.rounds, T: G.time, i: G.qi, q: q ? q.q : '',
     pl: G.players.map(p => ({ id: p.id, n: p.name, c: p.col, b: p.bot ? 1 : 0, t: p.total, s: p.sub ? 1 : 0, g: p.gone ? 1 : 0, a: p.again ? 1 : 0, x: p.booms || 0, l: p.lives || 0, e: p.elim })),
-    left: G.ph === 'q' || G.ph === 'b' || G.ph === 'c' || G.ph === 'a' ? Math.max(0, G.tEnd - now) : 0,
-    nl: G.ph === 'r' || G.ph === 'x' || G.ph === 'rt' ? Math.max(0, G.nextAt - now) : 0,
+    left: G.ph === 'q' || G.ph === 'b' || G.ph === 'c' || G.ph === 'a' || G.ph === 'o' || G.ph === 'v' || G.ph === 'w' ? Math.max(0, G.tEnd - now) : 0,
+    nl: G.ph === 'r' || G.ph === 'x' || G.ph === 'rt' || G.ph === 'or' || G.ph === 'lr' || G.ph === 'br' ? Math.max(0, G.nextAt - now) : 0,
     res: G.ph === 'r' ? G.res : null, deep: G.ph === 'r' || G.ph === 'x' || G.ph === 'rt' ? G.deep : '', ex: G.ph === 'r' || G.ph === 'x' || G.ph === 'rt' ? G.ex : [],
     best: G.ph === 'f' ? G.best : null, hp: G.hostPid,
+    mp: G.maxP, W: G.wins,
+    dd: G.mode === 'p' && G.duel && (G.ph === 'q' || G.ph === 'r' || G.ph === 'br') ? G.duel : null,
+    dl: G.mode === 'p' && G.cur ? { r: G.rn[G.bk.r], a: G.cur.a, b: G.cur.b, sa: G.cur.sa, sb: G.cur.sb, W: G.wins, w: G.cur.w || '', fin: G.bk.r === G.rn.length - 1 ? 1 : 0 } : null,
+    bk: G.mode === 'p' && G.ph === 'br' ? G.bk.rounds.map(r => r.map(m => [m.a || '', m.b || '', m.w || '', m.sa, m.sb])) : null,
+    rn: G.mode === 'p' ? G.rn : [], dn: G.mode === 'p' && G.ph === 'r' ? G.dn : '',
+    bd: G.ph === 'w' || G.ph === 'lr' ? G.bids : null, bb: G.ph === 'w' || G.ph === 'lr' ? G.bidder : null, nd: G.need, mb: G.mb, gt: G.ph === 'w' || G.ph === 'lr' ? G.got.slice(-12) : [], lr: G.ph === 'lr' ? G.lres : null,
+    sa: G.mode === 's' && (G.ph === 'o' || G.ph === 'or') ? G.sa : '', st: G.ph === 'or' ? G.sotier : '', sg: G.ph === 'or' ? G.sres : null,
     md: G.mode, h: G.holder, ps: G.passes, xo: G.xo,
     hm: G.hearts, ch: G.chooser, tg: G.target, th: G.thr, x2: G.x2 ? 1 : 0, tt: G.tt, ra: G.ph === 'rt' ? G.ra : null,
     u: G.mode === 'b' && (G.ph === 'b' || G.ph === 'x') ? G.used.slice(-18) : [],
@@ -2990,7 +3097,7 @@ function hostMsg(d, peer) {
   let p = G.players.find(x => x.id === d.pid);
   if (d.t === 'h') {
     if (p) { if (peer) p.peer = peer; p.seen = now; if (p.gone) { p.gone = false; changed(); } }
-    else if (G.ph === 'lobby' && G.players.length < 4 && typeof d.pid === 'string' && d.pid.length <= 16) { addPlayer(d.pid, d.n, false, peer); changed(); }
+    else if (G.ph === 'lobby' && G.players.length < G.maxP && typeof d.pid === 'string' && d.pid.length <= 16) { addPlayer(d.pid, d.n, false, peer); changed(); }
     return;
   }
   if (!p || p.bot) return;
@@ -3007,6 +3114,16 @@ function hostMsg(d, peer) {
     if (to && to.lives > 0 && !to.gone) doChoose(to.id);
   }
   else if (d.t === 'a' && G.ph === 'a' && p.id === G.target && !G.ansIn) { G.ansIn = true; resolveQuiz(String(d.a == null ? '' : d.a).slice(0, 40)); }
+  else if (d.t === 'z' && G.ph === 'o' && !p.sub && TORD.includes(d.g)) { G.sg[p.id] = d.g; p.sub = true; changed(); }
+  else if (d.t === 'v' && G.ph === 'v' && !p.sub) {
+    const b = Math.max(0, Math.min(G.mb, parseInt(d.b, 10) || 0));
+    G.bids[p.id] = b; G.bidOrder.push(p.id); p.sub = true; changed();
+  }
+  else if (d.t === 'a' && G.ph === 'w' && p.id === G.bidder) {
+    const q = BANK[G.qs[G.qi]];
+    const r = matchEx(q, String(d.a == null ? '' : d.a).slice(0, 40));
+    if (r && r.exact && !G.got.some(u => norm(u.a) === norm(r.disp))) ldAccept(r);
+  }
   else if (d.t === 'g' && G.ph === 'f') { p.again = true; changed(); }
   else if (d.t === 'b') {
     if (G.ph === 'lobby') G.players = G.players.filter(x => x.id !== p.id); else p.gone = true;
@@ -3052,17 +3169,25 @@ function pickQuestions(n) {
 }
 function hostStart() {
   if (!G || G.ph !== 'lobby') return;
+  if (G.mode === 'p') {
+    G.qs = pickQuestions(40); G.qi = -1; G.best = null; G.bk = null; G.cur = null; G.duel = null; G.rounds = 999;
+    G.players.forEach(p => { p.total = 0; p.booms = 0; p.lives = 0; p.elim = -1; p.again = false; });
+    pNextStep(); return;
+  }
   const n = Math.min(G.rounds, BANK.length);
   G.qs = pickQuestions(n);
   G.rounds = n; G.qi = -1; G.best = null;
-  G.players.forEach(p => { p.total = 0; p.booms = 0; p.lives = G.mode === 't' ? G.hearts : 0; p.elim = -1; p.again = false; });
+  G.players.forEach(p => { p.total = 0; p.booms = 0; p.lives = (G.mode === 't' || G.mode === 'k') ? G.hearts : 0; p.elim = -1; p.again = false; });
   G.lastCh = null;
   hostNextQ();
 }
 function hostNextQ() {
+  if (G.mode === 'p') { pNextStep(); return; }
   G.qi++;
-  if (G.qi >= G.rounds || (G.mode === 't' && G.players.filter(p => p.lives > 0).length <= 1)) { G.ph = 'f'; G.players = G.players.filter(p => !p.gone || p.total > 0); G.players.forEach(p => { p.again = p.bot; }); changed(); return; }
+  if (G.qi >= G.rounds || ((G.mode === 't' || G.mode === 'k') && G.players.filter(p => p.lives > 0).length <= 1)) { G.ph = 'f'; G.players = G.players.filter(p => !p.gone || p.total > 0); G.players.forEach(p => { p.again = p.bot; }); changed(); return; }
   const now = Date.now();
+  if (G.mode === 's') { sonarStart(BANK[G.qs[G.qi]]); return; }
+  if (G.mode === 'l') { ldStart(BANK[G.qs[G.qi]]); return; }
   if (G.mode === 't') {
     const q = BANK[G.qs[G.qi]];
     G.thr = pickThreshold(q); G.ra = null; G.target = null; G.x2 = false; G.ansIn = false;
@@ -3082,31 +3207,232 @@ function hostNextQ() {
   }
   G.ph = 'q'; G.tEnd = now + G.time * 1000; G.res = null; G.revealAt = 0;
   const q = BANK[G.qs[G.qi]];
+  if (G.mode === 'k') G.thr = kThr(G.qi, q);
   G.players.forEach(p => {
     p.ans = null; p.sub = false;
+    if (G.mode === 'k' && p.lives <= 0) { p.sub = true; p.ans = ''; return; }
     if (p.bot) p.botAt = now + 2500 + Math.random() * Math.min(G.time * 1000 * 0.75, 15000);
+    p.botAns = p.bot ? botAnswer(q) : null;
+  });
+  changed();
+}
+const KTHR = [10, 10, 30, 30, 30, 55, 55, 70, 70, 85, 100];
+function kThr(i, q) {
+  const order = [10, 30, 55, 70, 85, 100];
+  let thr = KTHR[Math.min(i, KTHR.length - 1)];
+  const count = t => ['m', 'v', 'd', 'r', 's', 'p'].reduce((n, id) => n + (TIER[id].pts >= t ? q[id].split('|').filter(Boolean).length : 0), 0);
+  while (thr > 10 && count(thr) < 3) thr = order[order.indexOf(thr) - 1];
+  return thr;
+}
+const TORD = ['p', 's', 'r', 'd', 'v', 'm'];
+const SPTS = [100, 50, 20];
+function sonarStart(q) {
+  const W = [['p', 22], ['s', 22], ['r', 20], ['d', 18], ['v', 12], ['m', 6]];
+  let pickA = null;
+  for (let i = 0; i < 30 && !pickA; i++) {
+    let x = Math.random() * 100, t = 'p';
+    for (const [id, w] of W) { if ((x -= w) < 0) { t = id; break; } }
+    const ents = q[t].split('|').filter(Boolean);
+    if (!ents.length) continue;
+    const r = matchEx(q, firstAlias(pick(ents)));
+    if (r && r.exact && r.t === t) pickA = r;
+  }
+  if (!pickA) { const r = matchEx(q, firstAlias(q.p.split('|')[0])); pickA = r; }
+  G.sa = pickA.disp; G.sotier = pickA.t; G.sg = {}; G.sres = null;
+  const now = Date.now();
+  G.ph = 'o'; G.tt = G.time * 1000; G.tEnd = now + G.tt; G.revealAt = 0;
+  const ti = TORD.indexOf(G.sotier);
+  G.players.forEach(p => {
+    p.sub = false;
+    if (p.bot) {
+      p.botAt = now + 2000 + Math.random() * Math.min(G.time * 600, 8000);
+      const x = Math.random(); const off = x < 0.35 ? 0 : x < 0.7 ? (Math.random() < .5 ? -1 : 1) : (Math.random() < .5 ? -2 : 2);
+      p.botG = TORD[Math.max(0, Math.min(5, ti + off))];
+    }
+  });
+  changed();
+}
+function sonarResolve() {
+  const ti = TORD.indexOf(G.sotier);
+  G.sres = {};
+  G.players.forEach(p => {
+    const g = G.sg[p.id];
+    if (!g) { G.sres[p.id] = { g: '', p: 0 }; return; }
+    const d = Math.abs(TORD.indexOf(g) - ti);
+    const pts = d < SPTS.length ? SPTS[d] : 0;
+    p.total += pts; G.sres[p.id] = { g, p: pts };
+  });
+  const q = BANK[G.qs[G.qi]];
+  G.deep = firstAlias(q.m.split('|')[0]);
+  G.ph = 'or'; G.nextAt = Date.now() + 18000;
+  changed();
+}
+function ldStart(q) {
+  const total = ['m', 'v', 'd', 'r', 's', 'p'].reduce((n, t) => n + q[t].split('|').filter(Boolean).length, 0);
+  G.mb = Math.max(2, Math.min(12, Math.floor(total / 2)));
+  G.bids = {}; G.bidOrder = []; G.bidder = null; G.need = 0; G.got = []; G.lres = null;
+  const now = Date.now();
+  G.ph = 'v'; G.tt = G.time * 1000; G.tEnd = now + G.tt; G.revealAt = 0;
+  G.players.forEach(p => {
+    p.sub = false;
+    if (p.bot) {
+      p.botAt = now + 1500 + Math.random() * Math.min(G.time * 600, 7000);
+      const x = Math.random();
+      p.botB = x < 0.15 ? 0 : x < 0.6 ? 1 + rnd(3) : x < 0.9 ? 3 + rnd(4) : 6 + rnd(5);
+      p.botB = Math.min(G.mb, p.botB);
+    }
+  });
+  changed();
+}
+function ldResolveBids() {
+  let best = 0, who = null;
+  for (const id of G.bidOrder) {
+    const pl = G.players.find(x => x.id === id);
+    if (!pl || pl.gone) continue;
+    if (G.bids[id] > best) { best = G.bids[id]; who = id; }
+  }
+  const now = Date.now();
+  if (!who) { G.bidder = null; G.need = 0; G.lres = { none: 1 }; G.ph = 'lr'; G.nextAt = now + 12000; changed(); return; }
+  G.bidder = who; G.need = best; G.got = [];
+  G.ph = 'w'; G.tt = Math.max(20, best * 8) * 1000; G.tEnd = now + G.tt;
+  const bp = G.players.find(x => x.id === who);
+  if (bp && bp.bot) { G.botCan = Math.random() < (best <= 3 ? 0.85 : best <= 6 ? 0.55 : 0.25); G.botAt = now + 1500 + Math.random() * 1500; G.botStop = G.botCan ? best : Math.max(0, best - 1 - rnd(3)); }
+  changed();
+}
+function ldAccept(r) {
+  G.got.push({ a: r.disp, t: r.t });
+  if (G.got.length >= G.need) { ldFinish(true); return; }
+  const bp = G.players.find(x => x.id === G.bidder);
+  if (bp && bp.bot) G.botAt = Date.now() + 1200 + Math.random() * 1800;
+  changed();
+}
+function ldFinish(ok) {
+  const bp = G.players.find(x => x.id === G.bidder);
+  let delta = 0;
+  if (bp) {
+    if (ok) { delta = G.need * 10 + G.got.reduce((n, u) => n + TIER[u.t].pts, 0); bp.total += delta; }
+    else { const loss = Math.min(bp.total, G.need * 5); bp.total -= loss; delta = -loss; }
+  }
+  const q = BANK[G.qs[G.qi]];
+  G.deep = firstAlias(q.m.split('|')[0]);
+  G.lres = { ok: ok ? 1 : 0, d: delta, n: G.got.length };
+  G.ph = 'lr'; G.nextAt = Date.now() + 20000;
+  changed();
+}
+function pBuild() {
+  const ids = shuffle(G.players.filter(x => !x.gone).map(x => x.id));
+  let size = 2; while (size < ids.length) size *= 2;
+  const half = size / 2, slots = Array(size).fill(null);
+  ids.forEach((id, i) => { if (i < half) slots[2 * i] = id; else slots[2 * (i - half) + 1] = id; });
+  const rounds = [];
+  rounds.push(Array.from({ length: half }, (_, i) => ({ a: slots[2 * i], b: slots[2 * i + 1], w: null, sa: 0, sb: 0 })));
+  let n = half;
+  while (n > 1) { n /= 2; rounds.push(Array.from({ length: n }, () => ({ a: null, b: null, w: null, sa: 0, sb: 0 }))); }
+  G.bk = { rounds, r: 0, m: 0 };
+  G.rn = size === 8 ? ['Ćwierćfinał', 'Półfinał', 'Finał'] : size === 4 ? ['Półfinał', 'Finał'] : ['Finał'];
+  G.cur = null; G.duel = null;
+}
+function pSetWinner(r, m, id) {
+  const mt = G.bk.rounds[r][m]; mt.w = id;
+  const loser = mt.a === id ? mt.b : mt.a;
+  const lp = G.players.find(x => x.id === loser); if (lp) lp.elim = r;
+  if (r + 1 < G.bk.rounds.length) { const nx = G.bk.rounds[r + 1][m >> 1]; if (m % 2 === 0) nx.a = id; else nx.b = id; }
+  else { const wp = G.players.find(x => x.id === id); if (wp) wp.elim = G.bk.rounds.length; }
+}
+function pNextMatch() {
+  for (let r = 0; r < G.bk.rounds.length; r++) {
+    for (let m = 0; m < G.bk.rounds[r].length; m++) {
+      const mt = G.bk.rounds[r][m];
+      if (mt.w) continue;
+      if (mt.a && mt.b) { G.bk.r = r; G.bk.m = m; return mt; }
+      if (mt.a || mt.b) { pSetWinner(r, m, mt.a || mt.b); return pNextMatch(); }
+    }
+  }
+  return null;
+}
+function pNextStep() {
+  if (!G.bk) pBuild();
+  if (G.cur && G.cur.w) G.cur = null;
+  if (!G.cur) {
+    const mt = pNextMatch();
+    if (!mt) { G.ph = 'f'; G.cur = null; G.players = G.players.filter(p => !p.gone || p.total > 0); G.players.forEach(p => { p.again = p.bot; }); changed(); return; }
+    G.cur = mt; G.duel = [mt.a, mt.b]; G.ph = 'br'; G.nextAt = Date.now() + 8000; changed(); return;
+  }
+  startDuelQ();
+}
+function startDuelQ() {
+  G.qi++;
+  if (G.qi >= G.qs.length) G.qs = G.qs.concat(pickQuestions(20));
+  const q = BANK[G.qs[G.qi]], now = Date.now();
+  G.duel = [G.cur.a, G.cur.b];
+  G.ph = 'q'; G.tt = G.time * 1000; G.tEnd = now + G.tt; G.res = null; G.revealAt = 0;
+  G.players.forEach(p => {
+    p.ans = null; p.sub = !G.duel.includes(p.id);
+    if (p.bot && !p.sub) p.botAt = now + 2500 + Math.random() * Math.min(G.time * 700, 12000);
     p.botAns = p.bot ? botAnswer(q) : null;
   });
   changed();
 }
 function hostReveal() {
   const q = BANK[G.qs[G.qi]];
-  G.res = G.players.map(p => {
+  const uniq = G.mode === 'u', kmode = G.mode === 'k';
+  let rows = G.players.map(p => {
     const raw = (p.ans || '').trim();
     const m = raw ? match(q, raw) : null;
-    const tr = m ? m.t : 'z';
-    const pts = TIER[tr].pts;
-    p.total += pts;
-    if (pts > 0 && (!G.best || pts > G.best.p)) G.best = { n: p.name, a: m.disp, p: pts, t: tr };
-    return { id: p.id, a: raw.slice(0, 40), tr, p: pts, e: raw ? 0 : 1 };
+    return { p, raw, m, tr: m ? m.t : 'z', base: m ? TIER[m.t].pts : 0 };
   });
+  if (G.mode === 'p') rows = rows.filter(r => G.duel.includes(r.p.id));
+  const cnt = {};
+  if (uniq) rows.forEach(r => { if (r.m) { const k = norm(r.m.disp); cnt[k] = (cnt[k] || 0) + 1; } });
+  G.res = [];
+  rows.forEach(r => {
+    const p = r.p; let pts = r.base; const ex = {};
+    if (kmode && p.lives <= 0) return;
+    if (uniq) {
+      if (r.m && cnt[norm(r.m.disp)] > 1) { pts = 0; ex.du = 1; }
+      else if (r.m) { pts = r.base * 2; ex.un = 1; }
+    }
+    if (kmode) {
+      const ok = r.base >= G.thr && r.base > 0;
+      if (ok) ex.ok = 1;
+      else { p.lives = Math.max(0, p.lives - 1); ex.lh = 1; if (p.lives === 0) { p.elim = G.qi; ex.dd = 1; } pts = 0; }
+    }
+    p.total += pts;
+    if (r.base > 0 && !ex.du && (!G.best || r.base > G.best.p)) G.best = { n: p.name, a: r.m.disp, p: r.base, t: r.tr };
+    G.res.push(Object.assign({ id: p.id, a: r.raw.slice(0, 40), tr: r.tr, p: pts, bp: ex.du ? 0 : r.base, e: r.raw ? 0 : 1 }, ex));
+  });
+  if (G.mode === 'p') {
+    const mt = G.cur, ra = G.res.find(x => x.id === mt.a), rb = G.res.find(x => x.id === mt.b);
+    const pa = ra ? ra.bp : 0, pb = rb ? rb.bp : 0;
+    const nm = id => (G.players.find(x => x.id === id) || { name: '?' }).name;
+    if (pa === pb) G.dn = 'Remis na ' + pa + ' pkt. Gramy dalej.';
+    else {
+      const win = pa > pb ? mt.a : mt.b;
+      if (win === mt.a) mt.sa++; else mt.sb++;
+      G.dn = 'Punkt dla ' + nm(win) + '. Seria ' + mt.sa + ':' + mt.sb + ' (do ' + G.wins + ' wygranych).';
+      if (mt.sa >= G.wins || mt.sb >= G.wins) {
+        pSetWinner(G.bk.r, G.bk.m, win);
+        G.dn += ' ' + nm(win) + (G.bk.r === G.rn.length - 1 ? ' wygrywa cały puchar!' : ' wygrywa pojedynek i awansuje.');
+      }
+    }
+  }
   G.deep = firstAlias(q.m.split('|')[0]);
   const pool = shuffle([...q.v.split('|'), ...q.d.split('|')].filter(Boolean).map(firstAlias).filter(x => x && x !== G.deep));
   G.ex = pool.slice(0, 3);
   G.ph = 'r'; G.nextAt = Date.now() + 22000;
   changed();
 }
-function setMode(m) { G.mode = m; G.rounds = m === 'b' ? 5 : m === 't' ? 10 : 8; G.time = 30; G.hearts = 3; changed(); }
+const MODES = {
+  d: { n: 'Głębiny', min: 1, desc: 'Wszyscy odpowiadają jednocześnie. Im rzadsza odpowiedź, tym głębiej zejdziesz.', rounds: [5, 8, 10, 15, 20, 30], time: [20, 30, 45, 60], r0: 8, t0: 30, tl: 'Czas na odpowiedź (s)', rl: 'Liczba pytań' },
+  u: { n: 'Unikat', min: 2, desc: 'Wszyscy odpowiadają jednocześnie. Gdy dwie osoby podadzą to samo, obie dostają 0 punktów. Odpowiedź, której nikt inny nie podał, liczy się podwójnie.', rounds: [5, 8, 10, 15, 20, 30], time: [20, 30, 45, 60], r0: 8, t0: 30, tl: 'Czas na odpowiedź (s)', rl: 'Liczba pytań' },
+  k: { n: 'Ciśnienie', min: 2, hearts: true, desc: 'Wszyscy odpowiadają jednocześnie, a próg punktów rośnie z rundy na rundę. Odpowiedź poniżej progu albo brak odpowiedzi kosztuje serce. Bez serc odpadasz. Zostaje ostatni nurek.', rounds: [5, 8, 10, 15, 20, 30], time: [15, 20, 30, 45, 60], r0: 12, t0: 30, tl: 'Czas na odpowiedź (s)', rl: 'Maksymalna liczba pytań' },
+  b: { n: 'Rozdymka', min: 2, desc: 'Podajecie sobie rozdymkę. Każdy po kolei mówi inną odpowiedź na to samo pytanie, a rozdymka rośnie. Po wybranym czasie wybucha u tego, kto ją trzyma.', rounds: [3, 5, 8, 10, 15], time: [15, 20, 30, 45, 60, 90], r0: 5, t0: 30, tl: 'Czas do wybuchu (s)', rl: 'Liczba rund (pytań)' },
+  t: { n: 'Teleturniej', min: 2, hearts: true, desc: 'Gra losuje gracza, który wskazuje, kto odpowie. Jeśli wskaże siebie, dostaje x2 punkty. Przy każdym pytaniu losowany jest próg punktów. Odpowiedź poniżej progu albo brak odpowiedzi kosztuje serce. Bez serc odpadasz.', rounds: [5, 8, 10, 15, 20, 30], time: [15, 20, 30, 45, 60], r0: 10, t0: 30, tl: 'Czas na odpowiedź (s)', rl: 'Maksymalna liczba pytań' },
+  l: { n: 'Licytacja', min: 2, desc: 'Padają pytania, a gracze licytują, ile różnych odpowiedzi potrafią wymienić. Najwyższy licytujący musi podać tyle poprawnych, niepowtarzających się odpowiedzi. Udało się: punkty. Nie udało się: strata.', rounds: [3, 5, 8, 10, 15], time: [10, 15, 20, 30], r0: 6, t0: 15, tl: 'Czas na licytację (s)', rl: 'Liczba pytań' },
+  p: { n: 'Pojedynki', min: 2, wins: true, noRounds: true, desc: 'Puchar w parach: ćwierćfinały, półfinały i finał. W starciu oboje odpowiadają na to samo pytanie i wygrywa głębsza odpowiedź. Remis oznacza kolejne pytanie. Reszta gra rolę widzów.', time: [15, 20, 30, 45], r0: 0, t0: 20, tl: 'Czas na odpowiedź (s)' },
+  s: { n: 'Sonar', min: 1, desc: 'Gra pokazuje gotową odpowiedź, a Wy zgadujecie, na jakim poziomie rzadkości jest. Trafiony poziom daje 100 punktów, o jeden obok 50, o dwa 20.', rounds: [5, 8, 10, 15, 20], time: [10, 15, 20, 30], r0: 10, t0: 15, tl: 'Czas na odpowiedź (s)', rl: 'Liczba pytań' },
+};
+function setMode(m) { const c = MODES[m]; G.mode = m; G.rounds = c.r0; G.time = c.t0; G.hearts = 3; G.wins = 2; changed(); }
 const THR = [[10, 30], [30, 40], [55, 15], [70, 10], [85, 4], [100, 1]];
 function pickThreshold(q) {
   let x = Math.random() * 100, thr = 10;
@@ -3184,6 +3510,19 @@ function botBomb(q) {
   }
   return null;
 }
+function botBomb2(q, usedList) {
+  const used = new Set(usedList.map(u => norm(u.a)));
+  const W = [['p', 32], ['s', 26], ['r', 18], ['d', 13], ['v', 8], ['m', 3]];
+  for (let i = 0; i < 30; i++) {
+    let x = Math.random() * 100, t = 'p';
+    for (const [id, w] of W) { if ((x -= w) < 0) { t = id; break; } }
+    const ents = q[t].split('|').filter(Boolean);
+    if (!ents.length) continue;
+    const r = matchEx(q, firstAlias(pick(ents)));
+    if (r && r.exact && !used.has(norm(r.disp))) return r;
+  }
+  return null;
+}
 function bombExplode() {
   const hd = G.players.find(p => p.id === G.holder);
   if (hd) hd.booms = (hd.booms || 0) + 1;
@@ -3198,7 +3537,7 @@ function hostAgain() {
   if (!G || G.ph !== 'f') return;
   G.players = G.players.filter(p => !p.gone);
   G.players.forEach(p => { p.total = 0; p.booms = 0; p.lives = 0; p.elim = -1; p.again = false; p.sub = false; p.ans = null; });
-  G.ph = 'lobby'; G.qi = -1; G.best = null; G.res = null;
+  G.ph = 'lobby'; G.qi = -1; G.best = null; G.res = null; G.bk = null; G.cur = null; G.duel = null; G.rounds = MODES[G.mode].r0 || G.rounds;
   changed();
 }
 function hostTick(now) {
@@ -3238,6 +3577,31 @@ function hostTick(now) {
     if (tg.bot && now >= G.botAt && !G.ansIn) { G.ansIn = true; resolveQuiz(G.botAns); return; }
     if (now >= G.tEnd + 1600 && !G.ansIn) { G.ansIn = true; resolveQuiz(''); return; }
   } else if (G.ph === 'rt') {
+    if (now >= G.nextAt) { hostNextQ(); return; }
+  } else if (G.ph === 'br') {
+    if (now >= G.nextAt) { startDuelQ(); return; }
+  } else if (G.ph === 'v') {
+    for (const p of G.players) if (p.bot && !p.sub && now >= p.botAt) { G.bids[p.id] = p.botB; G.bidOrder.push(p.id); p.sub = true; dirty = true; }
+    const active = G.players.filter(p => !p.gone);
+    if (active.length && active.every(p => p.sub)) { if (!G.revealAt) G.revealAt = now + 800; }
+    if ((G.revealAt && now >= G.revealAt) || now >= G.tEnd + 1500) { ldResolveBids(); return; }
+  } else if (G.ph === 'w') {
+    const bp = G.players.find(x => x.id === G.bidder);
+    if (!bp || bp.gone) { ldFinish(false); return; }
+    if (bp.bot && now >= G.botAt && G.got.length < G.botStop) {
+      const a = botBomb2(BANK[G.qs[G.qi]], G.got);
+      if (a) { ldAccept(a); return; }
+      G.botStop = G.got.length; 
+    }
+    if (now >= G.tEnd) { ldFinish(false); return; }
+  } else if (G.ph === 'lr') {
+    if (now >= G.nextAt) { hostNextQ(); return; }
+  } else if (G.ph === 'o') {
+    for (const p of G.players) if (p.bot && !p.sub && now >= p.botAt) { G.sg[p.id] = p.botG; p.sub = true; dirty = true; }
+    const active = G.players.filter(p => !p.gone);
+    if (active.length && active.every(p => p.sub)) { if (!G.revealAt) G.revealAt = now + 700; }
+    if ((G.revealAt && now >= G.revealAt) || now >= G.tEnd + 1500) { sonarResolve(); return; }
+  } else if (G.ph === 'or') {
     if (now >= G.nextAt) { hostNextQ(); return; }
   } else if (G.ph === 'x') {
     if (now >= G.nextAt) { hostNextQ(); return; }
@@ -3319,6 +3683,9 @@ $('#btn-leave-l').addEventListener('click', leave);
 $('#btn-leave-f').addEventListener('click', leave);
 $('#btn-start').addEventListener('click', () => { if (isHost) hostStart(); });
 $('#btn-next').addEventListener('click', () => { if (isHost && G.ph === 'r') hostNextQ(); });
+$('#bk-next').addEventListener('click', () => { if (isHost && G.ph === 'br') startDuelQ(); });
+$('#ld-next').addEventListener('click', () => { if (isHost && G.ph === 'lr') hostNextQ(); });
+$('#snext').addEventListener('click', () => { if (isHost && G.ph === 'or') hostNextQ(); });
 $('#bnext').addEventListener('click', () => { if (isHost && G.ph === 'x') hostNextQ(); });
 $('#qnext').addEventListener('click', () => { if (isHost && G.ph === 'rt') hostNextQ(); });
 $('#btn-again').addEventListener('click', () => {
@@ -3326,8 +3693,8 @@ $('#btn-again').addEventListener('click', () => {
   else { act({ t: 'g', pid: ME.pid }); const b = $('#btn-again'); b.disabled = true; b.textContent = 'Czekam na hosta…'; }
 });
 function addBot() {
-  if (!G || G.players.length >= 4) return;
-  const names = ['Krab Edek', 'Meduza Mela', 'Rekin Rysio', 'Płaszczka Pola', 'Konik Kazik', 'Mątwa Misia'];
+  if (!G || G.players.length >= G.maxP) return;
+  const names = ['Krab Edek', 'Meduza Mela', 'Rekin Rysio', 'Płaszczka Pola', 'Konik Kazik', 'Mątwa Misia', 'Ośmiornica Ola', 'Delfin Darek'];
   const free = names.filter(n => !G.players.some(p => p.name === n));
   addPlayer('bot' + rnd(1e6), pick(free.length ? free : names), true, null);
 }
@@ -3404,25 +3771,31 @@ $('#ans').addEventListener('input', () => {
 /* ============================================================
    RENDER
    ============================================================ */
-const SCREENS = ['home', 'joining', 'lobby', 'play', 'bomb', 'quiz', 'reveal', 'final'];
+const SCREENS = ['home', 'joining', 'lobby', 'play', 'bomb', 'quiz', 'sonar', 'bid', 'bracket', 'reveal', 'final'];
 let lastScreen = '';
 function current() {
   if (!S || view !== 'room') return view === 'joining' ? 'joining' : 'home';
-  return { lobby: 'lobby', q: 'play', r: 'reveal', f: 'final', b: 'bomb', x: 'bomb', c: 'quiz', a: 'quiz', rt: 'quiz' }[S.ph] || 'home';
+  return { lobby: 'lobby', q: 'play', r: 'reveal', f: 'final', b: 'bomb', x: 'bomb', c: 'quiz', a: 'quiz', rt: 'quiz', o: 'sonar', or: 'sonar', v: 'bid', w: 'bid', lr: 'bid', br: 'bracket' }[S.ph] || 'home';
 }
 function render() {
   const cur = current();
   for (const id of SCREENS) $('#s-' + id).hidden = id !== cur;
+  document.body.classList.toggle('many', !!(S && S.pl && S.pl.length > 4));
   if (cur !== lastScreen) { lastScreen = cur; window.scrollTo(0, 0); if (cur !== 'reveal') stopDive(); }
   if (cur !== 'reveal') revealRound = -2;
   if (cur !== 'play') playRound = -2;
   if (cur !== 'bomb') { bombRound = -2; bombTurn = ''; stopBomb(); }
   if (cur !== 'quiz') { quizRound = -2; quizKey = ''; }
+  if (cur !== 'sonar') { sonarKey = ''; }
+  if (cur !== 'bid') { bidKey = ''; }
   if (cur === 'lobby') updLobby();
   else if (cur === 'play') updPlay();
   else if (cur === 'reveal') updReveal();
   else if (cur === 'bomb') updBomb();
   else if (cur === 'quiz') updQuiz();
+  else if (cur === 'sonar') updSonar();
+  else if (cur === 'bid') updBid();
+  else if (cur === 'bracket') updBracket();
   else if (cur === 'final') updFinal();
   if (cur !== 'reveal') updDim(cur);
 }
@@ -3458,10 +3831,11 @@ function updDim(cur) { setDim(cur === 'play' || cur === 'final' || cur === 'lobb
 /* LOBBY */
 function updLobby() {
   $('#code-big').textContent = S.c;
-  guard('lobby', [S.pl, S.R, S.T, S.md, S.hm, isHost], () => {
-    $('#pl-count').textContent = S.pl.length + '/4';
+  guard('lobby', [S.pl, S.R, S.T, S.md, S.hm, S.mp, S.W, isHost], () => {
+    const mc = MODES[S.md] || MODES.d;
+    $('#pl-count').textContent = S.pl.length + '/' + S.mp;
     const ul = $('#pl-list'); ul.textContent = '';
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < S.mp; i++) {
       const p = S.pl[i];
       if (!p) { ul.append(h('li', { class: 'empty' }, 'Czeka na gracza…')); continue; }
       ul.append(h('li', null,
@@ -3472,30 +3846,29 @@ function updLobby() {
         p.id === ME.pid ? h('span', { class: 'tag you', text: 'ty' }) : null,
         isHost && p.b ? h('button', { class: 'xbtn', type: 'button', 'aria-label': 'Usuń bota ' + p.n, text: '×', onclick: () => { G.players = G.players.filter(x => x.id !== p.id); changed(); } }) : null));
     }
-    const chips = (host, vals, cur, set, unit) => {
+    const chips = (host, vals, cur, set, unit, dis) => {
       host.textContent = '';
-      for (const v of vals) host.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(v === cur), disabled: !isHost, text: v + (unit || ''), onclick: () => { set(v); changed(); } }));
+      for (const v of vals) host.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(v === cur), disabled: !isHost || (dis ? dis(v) : false), text: v + (unit || ''), onclick: () => { set(v); changed(); } }));
     };
-    const bomb = S.md === 'b';
     const modes = $('#set-mode'); modes.textContent = '';
-    [['d', 'Głębiny'], ['b', 'Rozdymka'], ['t', 'Teleturniej']].forEach(([id, label]) => modes.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(S.md === id), disabled: !isHost, text: label, style: 'font-family:var(--f-display)', onclick: () => { if (G.mode !== id) setMode(id); } })));
-    const quiz = S.md === 't';
-    $('#mode-desc').textContent = bomb
-      ? 'Podajecie sobie rozdymkę. Każdy po kolei mówi inną odpowiedź na to samo pytanie, a rozdymka rośnie. Po wybranym czasie wybucha u tego, kto ją trzyma.'
-      : quiz
-        ? 'Gra losuje gracza, który wskazuje, kto odpowie. Jeśli wskaże siebie, dostaje x2 punkty. Przy każdym pytaniu losowany jest próg punktów. Odpowiedź poniżej progu albo brak odpowiedzi kosztuje serce. Bez serc odpadasz.'
-        : 'Wszyscy odpowiadają jednocześnie. Im rzadsza odpowiedź, tym głębiej zejdziesz.';
-    $('#lbl-rounds').textContent = bomb ? 'Liczba rund (pytań)' : quiz ? 'Maksymalna liczba pytań' : 'Liczba pytań';
-    $('#lbl-time').textContent = bomb ? 'Czas do wybuchu (s)' : 'Czas na odpowiedź (s)';
-    chips($('#set-rounds'), bomb ? [3, 5, 8, 10, 15] : [5, 8, 10, 15, 20, 30], S.R, v => { G.rounds = v; });
-    chips($('#set-time'), bomb ? [15, 20, 30, 45, 60, 90] : quiz ? [15, 20, 30, 45, 60] : [20, 30, 45, 60], S.T, v => { G.time = v; });
-    $('#row-hearts').hidden = !quiz;
-    if (quiz) chips($('#set-hearts'), [2, 3, 4, 5], S.hm, v => { G.hearts = v; });
-    $('#btn-start').disabled = isHost && (bomb || quiz) && S.pl.length < 2;
-    $('#btn-bot').hidden = !isHost || S.pl.length >= 4;
+    Object.keys(MODES).forEach(id => modes.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(S.md === id), disabled: !isHost, text: MODES[id].n, style: 'font-family:var(--f-display)', onclick: () => { if (G.mode !== id) setMode(id); } })));
+    $('#mode-desc').textContent = mc.desc;
+    $('#lbl-rounds').parentElement.hidden = !!mc.noRounds;
+    $('#lbl-rounds').textContent = mc.rl || 'Liczba pytań';
+    $('#lbl-time').textContent = mc.tl;
+    if (!mc.noRounds) chips($('#set-rounds'), mc.rounds, S.R, v => { G.rounds = v; });
+    chips($('#set-time'), mc.time, S.T, v => { G.time = v; });
+    $('#row-hearts').hidden = !mc.hearts;
+    if (mc.hearts) chips($('#set-hearts'), [2, 3, 4, 5], S.hm, v => { G.hearts = v; });
+    $('#row-wins').hidden = !mc.wins;
+    if (mc.wins) chips($('#set-wins'), [1, 2, 3], S.W, v => { G.wins = v; });
+    chips($('#set-maxp'), [2, 3, 4, 5, 6, 7, 8], S.mp, v => { G.maxP = v; }, '', v => v < S.pl.length);
+    const need = mc.min;
+    $('#btn-start').disabled = isHost && S.pl.length < need;
+    $('#btn-bot').hidden = !isHost || S.pl.length >= S.mp;
     $('#btn-start').hidden = !isHost;
     $('#lobby-note').textContent = isHost
-      ? ((bomb || quiz) && S.pl.length < 2 ? 'Ten tryb wymaga co najmniej dwóch graczy. Dodaj bota.' : S.pl.length === 1 ? 'Jesteś sam w pokoju. Zacznij solo albo dodaj boty.' : 'Gdy wszyscy są w pokoju, naciśnij Start.')
+      ? (S.pl.length < need ? 'Ten tryb wymaga co najmniej ' + need + ' graczy. Dodaj bota.' : S.pl.length === 1 ? 'Jesteś sam w pokoju. Zacznij solo albo dodaj boty.' : 'Gdy wszyscy są w pokoju, naciśnij Start.')
       : 'Czekamy, aż host wybierze ustawienia i wystartuje grę.';
   });
 }
@@ -3503,7 +3876,7 @@ function updLobby() {
 /* PLAY */
 let playRound = -2;
 function updPlay() {
-  $('#rnd').textContent = 'Pytanie ' + (S.i + 1) + ' z ' + S.R;
+  $('#rnd').textContent = S.md === 'p' && S.dl ? S.dl.r + ' · pojedynek' : 'Pytanie ' + (S.i + 1) + ' z ' + S.R;
   $('#code-mini').textContent = S.c;
   $('#qtext').textContent = S.q;
   const input = $('#ans');
@@ -3513,12 +3886,25 @@ function updPlay() {
     sentRound = -1;
     setTimeout(() => { try { input.focus({ preventScroll: true }); } catch (e) {} }, 60);
   }
+  const spec = S.md === 'p' && S.dd && !S.dd.includes(ME.pid);
+  const dead = (S.md === 'k' && !!(me() && me().l <= 0)) || spec;
+  const tp = $('#thr-p'); tp.hidden = S.md !== 'k' && S.md !== 'p';
+  if (S.md === 'p' && S.dl) {
+    tp.style.setProperty('--c', 'var(--t-m)'); tp.textContent = '';
+    tp.append(h('b', { text: S.dl.r }), h('span', { text: nameOf(S.dl.a) + ' vs ' + nameOf(S.dl.b) + ' · seria ' + S.dl.sa + ':' + S.dl.sb + ' · do ' + S.dl.W + ' wygranych' }));
+  }
+  if (S.md === 'k') {
+    const tr = TIERS.find(t => t.pts === S.th) || TIER.p;
+    tp.style.setProperty('--c', 'var(--t-' + tr.id + ')'); tp.textContent = '';
+    tp.append(h('b', { text: 'Próg: ' + S.th + ' pkt' }), h('span', { text: 'Potrzebna odpowiedź z poziomu ' + tr.name + ' lub głębszego. Gorsza odpowiedź albo brak odpowiedzi kosztuje serce.' }));
+  }
   const m = me(), sent = !!(m && m.s) || sentRound === S.i;
-  if (sent) {
+  if (dead) { input.disabled = true; $('#send').disabled = true; $('#pass').disabled = true; setHint('default', spec ? 'Obserwujesz pojedynek.' : 'Odpadłeś. Obserwujesz grę do końca.'); }
+  else if (sent) {
     input.disabled = true; $('#send').disabled = true; $('#pass').disabled = true; input.classList.remove('bad', 'near');
     setHint('default', sentText === '' && sentRound === S.i ? 'Pas. Czekamy na pozostałych nurków.' : 'Wysłano. Czekamy na pozostałych nurków.');
   }
-  guard('ring', S.pl.map(p => [p.id, p.n, p.c, p.s, p.g]).concat([sentRound === S.i]), () => {
+  guard('ring', S.pl.map(p => [p.id, p.n, p.c, p.s, p.g, p.l]).concat([sentRound === S.i, S.md, S.dd]), () => {
     const ring = $('#ring'); ring.textContent = '';
     const n = S.pl.length;
     const idx = Math.max(0, S.pl.findIndex(p => p.id === ME.pid));
@@ -3527,10 +3913,13 @@ function updPlay() {
       const a = (90 + k * 360 / n) * Math.PI / 180;
       const x = 50 + Math.cos(a) * 36, y = 50 + Math.sin(a) * 34;
       const done = p.s || (p.id === ME.pid && sentRound === S.i);
-      ring.append(h('div', { class: 'pn' + (p.id === ME.pid ? ' me' : '') + (p.g ? ' gone' : ''), style: 'left:' + x + '%;top:' + y + '%' },
+      const pdead = S.md === 'k' && p.l <= 0;
+      const pspec = S.md === 'p' && S.dd && !S.dd.includes(p.id);
+      ring.append(h('div', { class: 'pn' + (p.id === ME.pid ? ' me' : '') + (p.g ? ' gone' : '') + (pdead ? ' dead' : '') + (pspec ? ' spec' : ''), style: 'left:' + x + '%;top:' + y + '%' },
         h('span', { class: 'bub ' + (p.g ? '' : done ? 'done' : 'dots'), text: p.g ? 'offline' : done ? '✓' : '' }),
         avatar(p.c),
-        h('span', { class: 'nm', text: p.id === ME.pid ? p.n + ' (ty)' : p.n })));
+        h('span', { class: 'nm', text: p.id === ME.pid ? p.n + ' (ty)' : p.n }),
+        S.md === 'k' ? (pdead ? h('span', { class: 'tag', text: 'odpadł' }) : heartsRow(p.l, S.hm)) : null));
     }
     ring.append(h('div', { class: 'tmr', id: 'tmr' },
       (() => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', '0 0 100 100');
@@ -3554,42 +3943,47 @@ let revealRound = -2, diveRaf = 0;
 function stopDive() { cancelAnimationFrame(diveRaf); diveRaf = 0; }
 function easeIO(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 function updReveal() {
-  $('#rnd-r').textContent = 'Pytanie ' + (S.i + 1) + ' z ' + S.R;
+  $('#rnd-r').textContent = S.md === 'p' && S.dl ? S.dl.r + ' · pojedynek' : 'Pytanie ' + (S.i + 1) + ' z ' + S.R;
   $('#code-r').textContent = S.c;
   $('#qtext-r').textContent = S.q;
-  const last = S.i + 1 >= S.R;
+  const last = S.md === 'p' ? !!(S.dl && S.dl.w && S.dl.fin) : S.i + 1 >= S.R;
   const btn = $('#btn-next');
-  btn.hidden = !isHost; btn.textContent = last ? 'Ranking →' : 'Następne pytanie →';
+  btn.hidden = !isHost; btn.textContent = last ? 'Ranking →' : S.md === 'p' ? (S.dl && S.dl.w ? 'Dalej →' : 'Następne pytanie pojedynku →') : 'Następne pytanie →';
   $('#next-note').textContent = isHost ? '' : 'Dalej poprowadzi host.';
   if (revealRound !== S.i) { revealRound = S.i; buildReveal(); }
 }
 function buildReveal() {
   stopDive();
   const cols = $('#cols'); cols.textContent = '';
-  cols.style.setProperty('--n', S.pl.length);
+  const plist = S.dd ? S.pl.filter(p => S.dd.includes(p.id)) : S.pl;
+  cols.style.setProperty('--n', Math.min(4, plist.length));
   const res = S.res || [];
   const items = [];
-  S.pl.forEach((p, i) => {
-    const r = res.find(x => x.id === p.id) || { a: '', tr: 'z', p: 0, e: 1 };
+  plist.forEach((p, i) => {
+    const r = res.find(x => x.id === p.id) || { a: '', tr: 'z', p: 0, e: 1, out: 1 };
     const tier = TIER[r.tr] || TIER.z;
     const water = h('div', { class: 'water' });
     const dm = h('span', { class: 'dm', text: '0 m' });
     const dv = h('div', { class: 'dv' }, avatar(p.c), dm);
     water.append(dv);
     const score = h('div', { class: 'score', style: '--c:var(--t-' + tier.id + ')' },
-      h('span', { class: 'pill', style: '--c:var(--t-' + tier.id + ')', text: r.e ? 'brak odpowiedzi' : tier.name }),
-      h('span', { class: 'pts', text: '+' + r.p }));
+      h('span', { class: 'pill', style: '--c:var(--t-' + (r.du || r.out ? 'z' : tier.id) + ')', text: r.out ? 'odpadł' : r.du ? 'Duplikat' : r.e ? 'brak odpowiedzi' : tier.name + (r.un ? ' ×2' : '') }),
+      h('span', { class: 'pts', text: '+' + r.p }),
+      r.lh ? h('span', { class: 'pill', style: '--c:var(--coral)', text: r.dd ? 'odpada z gry' : 'traci serce' }) : r.ok ? h('span', { class: 'pill', style: '--c:var(--t-p)', text: 'zalicza próg' }) : null);
     cols.append(h('div', { class: 'col' },
-      h('div', { class: 'head' }, avatar(p.c), h('span', { class: 'nm', text: p.id === ME.pid ? p.n + ' (ty)' : p.n }), h('span', { class: 'tot', text: 'razem ' + p.t })),
+      h('div', { class: 'head' }, avatar(p.c), h('span', { class: 'nm', text: p.id === ME.pid ? p.n + ' (ty)' : p.n }), h('span', { class: 'tot', text: (S.md === 'k' ? 'serca ' + p.l + ' · ' : '') + 'razem ' + p.t })),
       h('div', { class: 'ans' + (r.e ? ' none' : '') , text: r.e ? '—' : r.a }),
       water, score));
-    items.push({ water, dv, dm, score, pts: r.p, i });
+    items.push({ water, dv, dm, score, pts: r.bp !== undefined ? r.bp : r.p, i });
   });
   // sekcja "najgłębsza odpowiedź"
   const dp = $('#deepest'); dp.textContent = '';
-  dp.append(h('span', { class: 'label', text: 'Najgłębsza odpowiedź (Mariana Trench, 100 pkt)' }),
+  dp.append(...[h('span', { class: 'label', text: 'Najgłębsza odpowiedź (Mariana Trench, 100 pkt)' }),
     h('span', { class: 'big', text: cap(S.deep) || '—' }),
-    S.ex && S.ex.length ? h('span', { class: 'ex', text: 'Też punktowały wysoko: ' + S.ex.map(cap).join(', ') }) : null);
+    S.ex && S.ex.length ? h('span', { class: 'ex', text: 'Też punktowały wysoko: ' + S.ex.map(cap).join(', ') }) : null,
+    S.md === 'k' ? h('span', { class: 'ex', text: 'Próg tej rundy: ' + S.th + ' pkt. Odpowiedź poniżej progu kosztuje serce.' }) : null,
+    S.md === 'u' ? h('span', { class: 'ex', text: 'Duplikaty dają 0 punktów, a odpowiedź, której nikt inny nie podał, liczy się podwójnie.' }) : null,
+    S.md === 'p' && S.dn ? h('span', { class: 'ex', style: 'color:var(--foam);font-weight:700', text: S.dn }) : null].filter(Boolean));
   renderDetails();
   requestAnimationFrame(() => runDive(items));
 }
@@ -3598,7 +3992,7 @@ function renderDetails() {
   det.textContent = ''; tl.textContent = '';
   const res = S.res || [];
   det.append(h('h3', { text: 'Co oznaczają Wasze odpowiedzi' }));
-  S.pl.forEach(p => {
+  (S.dd ? S.pl.filter(p => S.dd.includes(p.id)) : S.md === 'k' ? S.pl.filter(p => res.some(r => r.id === p.id)) : S.pl).forEach(p => {
     const r = res.find(x => x.id === p.id) || { a: '', tr: 'z', p: 0, e: 1 };
     const who = p.id === ME.pid ? p.n + ' (ty)' : p.n;
     if (r.e) {
@@ -3649,7 +4043,7 @@ function runDive(items) {
     it.usable = Math.max(10, H - diverH - 8);
     it.dur = rm ? 10 : 900 + (it.pts / 100) * 3800;
     it.delay = rm ? 0 : it.i * 180;
-    it.target = it.usable * (it.pts / 100);
+    it.target = it.usable * Math.min(1, it.pts / 100);
     longest = Math.max(longest, it.dur + it.delay);
     // skala głębokości
     for (const dmark of [2000, 4000, 6000, 8000, 10000]) {
@@ -4017,19 +4411,248 @@ $('#qform').addEventListener('submit', e => { e.preventDefault(); tryQuiz(); });
 $('#qpass').addEventListener('click', () => { if (S && S.ph === 'a' && S.tg === ME.pid && !qSent) sendQuiz(''); });
 $('#qans').addEventListener('input', () => { const i = $('#qans'); i.classList.remove('bad', 'near'); if (qHintState !== 'default') setQHint('default', 'Odpowiedz z listy. Pas to utrata serca.'); });
 
+/* SONAR */
+let sonarKey = '', sGuess = null;
+function updSonar() {
+  const ph = S.ph;
+  $('#rnd-s').textContent = 'Pytanie ' + (S.i + 1) + ' z ' + S.R;
+  $('#code-s').textContent = S.c;
+  $('#qtext-s').textContent = S.q;
+  $('#sonar-a').textContent = cap(S.sa);
+  const key = S.i + ':' + ph;
+  if (sonarKey !== key) { sonarKey = key; sGuess = null; sigs.tierpick = ''; $('#sresult').hidden = true; }
+  const m = me();
+  const mineSent = !!(m && m.s) || !!sGuess;
+  const pickEl = $('#tierpick');
+  pickEl.hidden = ph !== 'o';
+  if (ph === 'o') guard('tierpick', [sGuess, mineSent], () => {
+    pickEl.textContent = '';
+    TORD.slice().reverse().forEach(id => {
+      const t = TIER[id];
+      pickEl.append(h('button', { class: 'btn', type: 'button', style: '--c:var(--t-' + id + ')', 'aria-pressed': String(sGuess === id), disabled: mineSent, onclick: () => {
+        sGuess = id; sGuess_at = Date.now(); act({ t: 'z', pid: ME.pid, g: id }); updSonar();
+      } }, h('b', { text: t.name }), h('small', { text: Math.round(t.pts * M_PER_PT).toLocaleString('pl-PL') + ' m' })));
+    });
+  });
+  $('#sinfo').textContent = ph === 'o' ? (mineSent ? 'Wybrano. Czekamy na pozostałych nurków.' : 'Wybierz poziom: trafiony daje 100 pkt, o jeden obok 50, o dwa 20.') : '';
+  const n = S.pl.length, idx = Math.max(0, S.pl.findIndex(p => p.id === ME.pid));
+  guard('sring', [S.pl.map(p => [p.id, p.n, p.c, p.s, p.g]), ph, !!sGuess], () => {
+    const arena = $('#sarena'); arena.querySelectorAll('.pn').forEach(x => x.remove());
+    for (let k2 = 0; k2 < n; k2++) {
+      const p = S.pl[(idx + k2) % n], [x, y] = nodePos(k2, n);
+      const done = p.s || (p.id === ME.pid && !!sGuess);
+      arena.append(h('div', { class: 'pn' + (p.id === ME.pid ? ' me' : '') + (p.g ? ' gone' : ''), style: 'left:' + x + '%;top:' + y + '%' },
+        h('span', { class: 'bub ' + (p.g ? '' : done ? 'done' : 'dots'), text: p.g ? 'offline' : done ? '✓' : '' }),
+        avatar(p.c), h('span', { class: 'nm', text: p.id === ME.pid ? p.n + ' (ty)' : p.n })));
+    }
+  });
+  $('#stmr').hidden = ph !== 'o';
+  tickSonarTimer();
+  if (ph === 'or') {
+    if (!$('#sresult').dataset.k || $('#sresult').dataset.k !== String(S.i)) { $('#sresult').dataset.k = String(S.i); showSonarResult(); }
+    $('#snext').hidden = !isHost;
+    $('#snext').textContent = S.i + 1 >= S.R ? 'Ranking →' : 'Następne pytanie →';
+    $('#snext-note').textContent = isHost ? '' : 'Dalej poprowadzi host.';
+  }
+}
+let sGuess_at = 0;
+function tickSonarTimer() {
+  if (!S || S.ph !== 'o') return;
+  const rem = Math.max(0, S.left - (Date.now() - S.rx));
+  $('#stnum').textContent = Math.ceil(rem / 1000);
+  const fg = $('#stmr .fg'); if (fg) fg.style.strokeDashoffset = String(276.5 * (1 - rem / Math.max(1, S.T * 1000)));
+  $('#stmr').classList.toggle('hot', rem <= 5000);
+}
+function showSonarResult() {
+  const tier = TIER[S.st] || TIER.p, ti = TORD.indexOf(S.st);
+  const rc = $('#srescard'); rc.textContent = '';
+  rc.append(h('span', { class: 'label', text: 'Poprawny poziom' }),
+    h('span', { class: 'res-title', style: 'color:var(--t-' + tier.id + ')', text: tier.name }),
+    h('span', { class: 'who-boom', text: '„' + cap(S.sa) + '” to ' + tier.pts + ' pkt, czyli ' + Math.round(tier.pts * M_PER_PT).toLocaleString('pl-PL') + ' m.' }),
+    h('div', { class: 'stand' }, S.pl.map(p => h('span', { class: p.id === ME.pid ? 'me' : '', text: p.n + ' · ' + p.t + ' pkt' }))));
+  const sd = $('#sdetails'); sd.textContent = '';
+  sd.append(h('h3', { text: 'Wasze typy' }));
+  S.pl.forEach(p => {
+    const r = (S.sg && S.sg[p.id]) || { g: '', p: 0 };
+    const gt = TIER[r.g];
+    const dist = r.g ? Math.abs(TORD.indexOf(r.g) - ti) : null;
+    sd.append(h('div', { class: 'gline' }, avatar(p.c), h('span', { class: 'nm', text: p.id === ME.pid ? p.n + ' (ty)' : p.n }),
+      r.g ? h('span', { class: 'pill', style: '--c:var(--t-' + r.g + ')', text: gt.name + (dist === 0 ? ' · trafiony' : ' · ' + dist + ' obok') }) : h('span', { class: 'pill', text: 'brak typu' }),
+      h('b', { class: 'mono', text: '+' + r.p })));
+  });
+  fillTiers($('#stiers'), curQ());
+  $('#sresult').hidden = false;
+  $('#sresult').scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+}
+
+/* LICYTACJA */
+let bidKey = '', bidVal = 1, bidSent = null, ldHintState = 'default', ldSent = null;
+function setLdHint(kind, text) {
+  ldHintState = kind;
+  const hi = $('#ld-hint'); hi.textContent = text; hi.className = 'hint' + (kind === 'err' ? ' err' : kind === 'fix' ? ' fix' : '');
+}
+function nameOf(id) { const p = S.pl.find(x => x.id === id); return p ? p.n : '?'; }
+function updBid() {
+  const ph = S.ph;
+  $('#ld-rnd').textContent = 'Pytanie ' + (S.i + 1) + ' z ' + S.R;
+  $('#ld-code').textContent = S.c;
+  $('#ld-q').textContent = S.q;
+  const key = S.i + ':' + ph;
+  const gotN = (S.gt || []).length;
+  if (bidKey !== key) {
+    bidKey = key; bidSent = null; ldSent = null; bidVal = Math.min(bidVal, S.mb) || 1; sigs.ldbox = '';
+    $('#ld-res').hidden = true;
+    const inp = $('#ld-ans'); inp.value = ''; inp.classList.remove('bad', 'near');
+    if (ph === 'w' && S.bb === ME.pid) { setLdHint('default', 'Podaj ' + S.nd + ' różnych odpowiedzi z listy.'); setTimeout(() => { try { inp.focus({ preventScroll: true }); } catch (e) {} }, 60); }
+  }
+  const m = me();
+  const mineSent = !!(m && m.s) || !!bidSent;
+  // okno licytacji
+  const box = $('#ld-box');
+  box.hidden = ph !== 'v';
+  if (ph === 'v') guard('ldbox', [bidVal, mineSent, S.mb], () => {
+    box.textContent = '';
+    if (mineSent) { box.append(h('p', { class: 'who-boom', text: 'Twoja oferta jest ukryta.' }), h('p', { class: 'muted', text: 'Czekamy na pozostałych nurków.' })); return; }
+    box.append(h('span', { class: 'label', text: 'Ile odpowiedzi podasz? (maks. ' + S.mb + ')' }),
+      h('div', { class: 'stepper' },
+        h('button', { type: 'button', 'aria-label': 'Mniej', disabled: bidVal <= 1, text: '−', onclick: () => { bidVal = Math.max(1, bidVal - 1); sigs.ldbox = ''; updBid(); } }),
+        h('b', { text: String(bidVal) }),
+        h('button', { type: 'button', 'aria-label': 'Więcej', disabled: bidVal >= S.mb, text: '+', onclick: () => { bidVal = Math.min(S.mb, bidVal + 1); sigs.ldbox = ''; updBid(); } })),
+      h('div', { class: 'actions', style: 'justify-content:center' },
+        h('button', { class: 'btn', type: 'button', text: 'Pas', onclick: () => { bidSent = { b: 0, at: Date.now() }; act({ t: 'v', pid: ME.pid, b: 0 }); sigs.ldbox = ''; updBid(); } }),
+        h('button', { class: 'btn primary', type: 'button', text: 'Licytuję ' + bidVal, onclick: () => { bidSent = { b: bidVal, at: Date.now() }; act({ t: 'v', pid: ME.pid, b: bidVal }); sigs.ldbox = ''; updBid(); } })),
+      h('p', { class: 'muted', style: 'font-size:13px', text: 'Wygrywa najwyższa oferta. Udało się: ' + 'oferta × 10 pkt plus punkty za odpowiedzi. Nie udało się: strata oferta × 5 pkt.' }));
+  });
+  // okno odpowiedzi licytującego
+  const iAmB = ph === 'w' && S.bb === ME.pid;
+  $('#ld-win').hidden = !iAmB;
+  const canType = iAmB && !ldSent && gotN < S.nd;
+  $('#ld-ans').disabled = !canType; $('#ld-send').disabled = !canType;
+  // informacja
+  const info = $('#ld-info');
+  if (ph === 'v') info.textContent = mineSent ? '' : 'Złóż ukrytą ofertę. Kto zaoferuje najwięcej, musi podać tyle odpowiedzi.';
+  else if (ph === 'w') {
+    const bids = S.pl.filter(p => S.bd && S.bd[p.id] != null).map(p => p.n + ' ' + S.bd[p.id]).join(', ');
+    info.textContent = (iAmB ? 'Licytujesz ' + S.nd + '. ' : nameOf(S.bb) + ' licytuje ' + S.nd + ' odpowiedzi. ') + 'Oferty: ' + bids + '.';
+  } else info.textContent = '';
+  // zaliczone odpowiedzi
+  const gb = $('#ld-got'); gb.hidden = !(ph === 'w' || ph === 'lr');
+  if (!gb.hidden) {
+    gb.textContent = '';
+    gb.append(h('p', { class: 'label', style: 'margin-bottom:8px', text: 'Podane odpowiedzi: ' + gotN + ' z ' + S.nd }));
+    const ch = h('div', { class: 'uchips' });
+    if (!gotN) ch.append(h('span', { class: 'muted', text: 'Jeszcze nic.' }));
+    (S.gt || []).forEach(u => ch.append(h('span', { class: 'uchip', style: '--c:var(--t-' + u.t + ')' }, cap(u.a))));
+    gb.append(ch);
+  }
+  // krąg
+  const n = S.pl.length, idx = Math.max(0, S.pl.findIndex(p => p.id === ME.pid));
+  guard('ldring', [S.pl.map(p => [p.id, p.n, p.c, p.s, p.g]), ph, S.bb, !!bidSent], () => {
+    const arena = $('#ld-arena'); arena.querySelectorAll('.pn').forEach(x => x.remove());
+    for (let k2 = 0; k2 < n; k2++) {
+      const p = S.pl[(idx + k2) % n], [x, y] = nodePos(k2, n);
+      const isB = (ph === 'w' || ph === 'lr') && p.id === S.bb;
+      const done = ph === 'v' && (p.s || (p.id === ME.pid && !!bidSent));
+      const bidTxt = (ph === 'w' || ph === 'lr') && S.bd && S.bd[p.id] != null ? String(S.bd[p.id]) : '';
+      arena.append(h('div', { class: 'pn' + (p.id === ME.pid ? ' me' : '') + (p.g ? ' gone' : '') + (isB ? ' holder' : ''), style: 'left:' + x + '%;top:' + y + '%' },
+        h('span', { class: 'bub ' + (p.g ? '' : isB ? 'turn' : done ? 'done' : bidTxt ? '' : 'dots'), text: p.g ? 'offline' : isB ? 'licytuje ' + bidTxt : done ? '✓' : bidTxt }),
+        avatar(p.c), h('span', { class: 'nm', text: p.id === ME.pid ? p.n + ' (ty)' : p.n })));
+    }
+  });
+  $('#ld-tmr').hidden = ph === 'lr';
+  tickLdTimer();
+  if (ph === 'lr') {
+    if ($('#ld-res').dataset.k !== String(S.i)) { $('#ld-res').dataset.k = String(S.i); showLdResult(); }
+    $('#ld-next').hidden = !isHost;
+    $('#ld-next').textContent = S.i + 1 >= S.R ? 'Ranking →' : 'Następne pytanie →';
+    $('#ld-note').textContent = isHost ? '' : 'Dalej poprowadzi host.';
+  }
+}
+function tickLdTimer() {
+  if (!S || (S.ph !== 'v' && S.ph !== 'w')) return;
+  const rem = Math.max(0, S.left - (Date.now() - S.rx));
+  $('#ld-tnum').textContent = Math.ceil(rem / 1000);
+  const fg = $('#ld-tmr .fg'); if (fg) fg.style.strokeDashoffset = String(276.5 * (1 - rem / Math.max(1, S.tt || S.T * 1000)));
+  $('#ld-tmr').classList.toggle('hot', rem <= 5000);
+}
+function showLdResult() {
+  const lr = S.lr || {};
+  const rc = $('#ld-rescard'); rc.textContent = '';
+  if (lr.none) rc.append(h('span', { class: 'res-title no', text: 'Cisza' }), h('span', { class: 'who-boom', text: 'Nikt nie licytował, więc nikt nie traci ani nie zyskuje.' }));
+  else {
+    const b = S.pl.find(p => p.id === S.bb), bn = b ? (b.id === ME.pid ? b.n + ' (to Ty)' : b.n) : '?';
+    rc.append(h('span', { class: 'res-title ' + (lr.ok ? 'ok' : 'no'), text: lr.ok ? 'Udało się!' : 'Nie udało się.' }),
+      h('span', { class: 'who-boom', text: bn + ' licytował ' + S.nd + ' i podał ' + lr.n + '.' }),
+      h('span', { class: 'who-boom', style: 'color:var(--' + (lr.ok ? 't-p' : 'coral') + ')', text: (lr.d >= 0 ? '+' : '') + lr.d + ' pkt' }));
+  }
+  rc.append(h('div', { class: 'stand' }, S.pl.map(p => h('span', { class: p.id === ME.pid ? 'me' : '', text: p.n + ' · ' + p.t + ' pkt' }))),
+    S.deep ? h('span', { style: 'font-size:14px;color:var(--muted);margin-top:6px' }, 'Najgłębsza odpowiedź: ', h('b', { style: 'color:var(--t-m)', text: cap(S.deep) })) : null);
+  fillTiers($('#ld-tiers'), curQ());
+  $('#ld-res').hidden = false;
+  $('#ld-res').scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+}
+function ldReject(msg) {
+  const input = $('#ld-ans');
+  input.classList.remove('near'); input.classList.add('bad');
+  input.classList.remove('shake'); void input.offsetWidth; input.classList.add('shake');
+  setLdHint('err', msg);
+  try { input.focus({ preventScroll: true }); input.select(); } catch (e) {}
+}
+function tryLd() {
+  if (!S || S.ph !== 'w' || S.bb !== ME.pid || ldSent) return;
+  const input = $('#ld-ans'), raw = input.value.trim();
+  if (!raw) { ldReject('Wpisz odpowiedź.'); return; }
+  const q = curQ();
+  const send = t => { ldSent = { at: Date.now(), t, n: (S.gt || []).length }; $('#ld-ans').disabled = true; $('#ld-send').disabled = true; act({ t: 'a', pid: ME.pid, a: t }); };
+  if (!q) { send(raw); return; }
+  const used = (S.gt || []).map(u => norm(u.a));
+  const r = matchEx(q, raw);
+  if (r && r.exact) {
+    if (used.includes(norm(r.disp))) { ldReject('„' + cap(r.disp) + '” już padło. Podaj inną odpowiedź.'); return; }
+    send(raw); return;
+  }
+  if (r) { input.value = r.disp; input.classList.remove('bad'); input.classList.add('near'); setLdHint('fix', 'Czy chodziło o „' + cap(r.disp) + '”? Naciśnij Enter jeszcze raz.'); return; }
+  ldReject('Nie ma takiej odpowiedzi na liście. Spróbuj innej.');
+}
+$('#ld-form').addEventListener('submit', e => { e.preventDefault(); tryLd(); });
+$('#ld-ans').addEventListener('input', () => { const i = $('#ld-ans'); i.classList.remove('bad', 'near'); if (ldHintState !== 'default') setLdHint('default', 'Podaj ' + (S ? S.nd : '') + ' różnych odpowiedzi z listy.'); });
+
+/* POJEDYNKI */
+function updBracket() {
+  $('#bk-code').textContent = S.c;
+  const dl = S.dl || {};
+  const now = $('#bk-now'); now.textContent = '';
+  now.append(h('span', { class: 'label', text: dl.r || 'Pojedynek' }),
+    h('span', { class: 'who-boom', style: 'font-size:clamp(22px,6vw,32px)', text: nameOf(dl.a) + '  vs  ' + nameOf(dl.b) }),
+    h('span', { class: 'muted', text: 'Do ' + dl.W + ' wygranych rund. Wygrywa głębsza odpowiedź, remis oznacza kolejne pytanie.' }));
+  const tree = $('#bk-tree'); tree.textContent = '';
+  (S.bk || []).forEach((round, ri) => {
+    const col = h('div', { class: 'bkcol' }, h('h4', { text: (S.rn && S.rn[ri]) || ('Runda ' + (ri + 1)) }));
+    round.forEach(m => {
+      const cur = (m[0] === dl.a && m[1] === dl.b);
+      const line = (id, sc) => h('div', { class: m[2] ? (m[2] === id ? 'w' : 'l') : '' }, h('span', { text: id ? nameOf(id) : '—' }), h('span', { text: id && (m[3] || m[4] || m[2]) ? String(sc) : '' }));
+      col.append(h('div', { class: 'bkm' + (cur ? ' cur' : '') }, line(m[0], m[3]), line(m[1], m[4])));
+    });
+    tree.append(col);
+  });
+  $('#bk-next').hidden = !isHost;
+  $('#bk-note').textContent = isHost ? '' : 'Pojedynek rozpocznie się za chwilę.';
+  $('#bk-bar').style.transform = 'scaleX(' + (Math.max(0, S.nl - (Date.now() - S.rx)) / 8000) + ')';
+}
+
 /* FINAL */
 function updFinal() {
-  guard('final', [S.pl, S.best, S.md, S.hm, isHost], () => {
-    const bomb = S.md === 'b', quiz = S.md === 't';
-    const sorted = S.pl.slice().sort(quiz ? (a, b) => ((b.l > 0) - (a.l > 0)) || (b.l - a.l) || (b.e - a.e) || (b.t - a.t) : bomb ? (a, b) => (a.x - b.x) || (b.t - a.t) : (a, b) => b.t - a.t);
+  guard('final', [S.pl, S.best, S.md, S.hm, S.rn, isHost], () => {
+    const bomb = S.md === 'b', quiz = S.md === 't' || S.md === 'k', cup = S.md === 'p';
+    const sorted = S.pl.slice().sort(cup ? (a, b) => (b.e - a.e) || (b.t - a.t) : quiz ? (a, b) => ((b.l > 0) - (a.l > 0)) || (b.l - a.l) || (b.e - a.e) || (b.t - a.t) : bomb ? (a, b) => (a.x - b.x) || (b.t - a.t) : (a, b) => b.t - a.t);
     const top = Math.max(1, S.R * 100);
     const list = $('#board'); list.textContent = '';
     sorted.forEach((p, i) => {
       const li = h('li', { class: i === 0 ? 'first' : '' },
         h('span', { class: 'rk', text: String(i + 1) }),
         avatar(p.c),
-        h('div', { class: 'who' }, h('b', { text: p.id === ME.pid ? p.n + ' (ty)' : p.n }), h('div', { class: 'depthbar' }, h('i', { 'data-w': String(quiz ? (p.l > 0 ? Math.max(8, 100 * p.l / Math.max(1, S.hm)) : 5) : bomb ? Math.max(6, 100 - 100 * p.x / Math.max(1, S.R)) : Math.min(100, p.t / top * 100 * 1.4)) }))),
-        h('div', { class: 'sc' }, quiz ? String(p.l) : bomb ? String(p.x) : p.t, h('small', { text: quiz ? (p.l > 0 ? 'SERC · ' + p.t + ' PKT' : 'ODPADŁ (RUNDA ' + (p.e + 1) + ') · ' + p.t + ' PKT') : bomb ? 'WYBUCHY · ' + p.t + ' PKT' : 'PKT' }), p.a && !p.b ? h('span', { class: 'ok', text: 'chce grać' }) : null));
+        h('div', { class: 'who' }, h('b', { text: p.id === ME.pid ? p.n + ' (ty)' : p.n }), h('div', { class: 'depthbar' }, h('i', { 'data-w': String(cup ? Math.max(8, 100 * (p.e + 1) / (S.rn.length + 1)) : quiz ? (p.l > 0 ? Math.max(8, 100 * p.l / Math.max(1, S.hm)) : 5) : bomb ? Math.max(6, 100 - 100 * p.x / Math.max(1, S.R)) : Math.min(100, p.t / top * 100 * 1.4)) }))),
+        h('div', { class: 'sc' }, cup ? String(p.t) : quiz ? String(p.l) : bomb ? String(p.x) : p.t, h('small', { text: cup ? (p.e >= S.rn.length ? 'MISTRZ · ' : p.e === S.rn.length - 1 ? 'FINALISTA · ' : 'ODPADŁ: ' + (S.rn[p.e] || '').toUpperCase() + ' · ') + 'PKT' : quiz ? (p.l > 0 ? 'SERC · ' + p.t + ' PKT' : 'ODPADŁ (RUNDA ' + (p.e + 1) + ') · ' + p.t + ' PKT') : bomb ? 'WYBUCHY · ' + p.t + ' PKT' : 'PKT' }), p.a && !p.b ? h('span', { class: 'ok', text: 'chce grać' }) : null));
       list.append(li);
     });
     requestAnimationFrame(() => requestAnimationFrame(() => list.querySelectorAll('i[data-w]').forEach(i => { i.style.width = i.dataset.w + '%'; })));
@@ -4062,6 +4685,23 @@ setInterval(() => {
       const m = me();
       if (remaining() <= 0 && !(m && m.s) && sentRound !== S.i) autoSubmit();
       if (sentRound === S.i && m && !m.s && now - sentAt > 1600) { sentAt = now; act({ t: 'a', pid: ME.pid, a: sentText }); }
+    } else if (S.ph === 'br') {
+      $('#bk-bar').style.transform = 'scaleX(' + (Math.max(0, S.nl - (now - S.rx)) / 8000) + ')';
+    } else if (S.ph === 'v' || S.ph === 'w' || S.ph === 'lr') {
+      tickLdTimer();
+      const mm = me();
+      if (S.ph === 'v' && bidSent && mm && !mm.s && now - bidSent.at > 2200) { act({ t: 'v', pid: ME.pid, b: bidSent.b }); bidSent.at = now; }
+      if (S.ph === 'w' && ldSent) {
+        if ((S.gt || []).length > ldSent.n) { ldSent = null; $('#ld-ans').value = ''; updBid(); setTimeout(() => { try { $('#ld-ans').focus({ preventScroll: true }); } catch (e) {} }, 30); }
+        else if (now - ldSent.at > 2200) { act({ t: 'a', pid: ME.pid, a: ldSent.t }); ldSent.at = now; }
+      }
+      if (S.ph === 'lr') $('#ld-nextbar').style.transform = 'scaleX(' + (Math.max(0, S.nl - (now - S.rx)) / 20000) + ')';
+    } else if (S.ph === 'o') {
+      tickSonarTimer();
+      const mm = me();
+      if (sGuess && mm && !mm.s && now - sGuess_at > 2200) { act({ t: 'z', pid: ME.pid, g: sGuess }); sGuess_at = now; }
+    } else if (S.ph === 'or') {
+      $('#snextbar').style.transform = 'scaleX(' + (Math.max(0, S.nl - (now - S.rx)) / 18000) + ')';
     } else if (S.ph === 'c' || S.ph === 'a') {
       tickQuizTimer();
       if (S.ph === 'c' && pickSent && now - pickSent.at > 2200) { act({ t: 'k', pid: ME.pid, to: pickSent.to }); pickSent.at = now; }
