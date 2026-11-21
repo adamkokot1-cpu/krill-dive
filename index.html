@@ -78,7 +78,15 @@ label{display:block;margin-bottom:6px}
 .lead{max-width:46ch;margin-top:14px;font-size:18px;color:#cfeaf0}
 .home-actions{display:grid;gap:12px;margin-top:16px}
 .join{display:grid;grid-template-columns:1fr auto;gap:10px}
-#code{text-transform:uppercase;letter-spacing:.3em;font:700 20px/1.2 var(--f-mono);text-align:center}
+#code{font:500 17px/1.2 var(--f-body)}
+.lobbyrow{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:14px;border-radius:16px;background:var(--glass);border:1px solid var(--line)}
+.lobbyrow .top{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0}
+.lobbyrow .host{font:800 19px/1.1 var(--f-display);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lobbyrow .names{grid-column:1/2;font-size:14px;color:#c4dde6;min-width:0}
+.lobbyrow .cnt{font:700 13px/1 var(--f-mono);color:var(--kelp)}
+.lobbyrow .btn{grid-column:2;grid-row:1/3;align-self:center}
+.lobbylist{display:grid;gap:10px}
+.empty-state{padding:26px 16px;text-align:center;color:var(--muted)}
 .ladder{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:6px}
 .ladder li{display:grid;grid-template-columns:14px 1fr auto auto;gap:10px;align-items:center;font-size:15px}
 .ladder .sw{width:14px;height:14px;border-radius:50%;background:var(--c)}
@@ -337,10 +345,12 @@ body.many .col .ans{font-size:11px;min-height:56px}
       <input type="text" id="name" maxlength="14" autocomplete="off" placeholder="np. Krab Edek">
       <div class="home-actions">
         <button class="btn primary" id="btn-host" type="button">Stwórz grę (host)</button>
+        <button class="btn" id="btn-browse" type="button">Pokaż lobby</button>
         <div class="join">
-          <input type="text" id="code" maxlength="5" autocomplete="off" placeholder="KOD" aria-label="Kod gry">
+          <input type="text" id="code" maxlength="14" autocomplete="off" placeholder="Kod lobby albo nick hosta" aria-label="Kod lobby albo nazwa hosta">
           <button class="btn" id="btn-join" type="button">Dołącz</button>
         </div>
+        <p class="muted" style="font-size:13px;margin-top:-4px">Lobby prywatne nie ma na liście. Wpisz jego kod albo nick hosta.</p>
       </div>
       <p class="net" id="net"><i></i><span>Sprawdzam połączenie…</span></p>
     </div>
@@ -348,6 +358,13 @@ body.many .col .ans{font-size:11px;min-height:56px}
       <p class="label">Skala głębokości</p>
       <ul class="ladder" id="ladder"></ul>
     </div>
+  </section>
+
+  <!-- LISTA LOBBY -->
+  <section id="s-lobbies" class="stack" hidden>
+    <div class="hud"><span class="rnd">Dostępne lobby</span><button class="btn small" id="btn-lobbies-back" type="button">← Wróć</button></div>
+    <div class="lobbylist" id="lobbylist"></div>
+    <p class="muted" id="lobbies-note" style="font-size:14px;text-align:center"></p>
   </section>
 
   <!-- JOINING -->
@@ -373,6 +390,7 @@ body.many .col .ans{font-size:11px;min-height:56px}
       <div class="setting"><span class="label">Tryb gry</span><div class="chips" id="set-mode"></div><p class="modedesc" id="mode-desc"></p></div>
       <div class="setting"><span class="label" id="lbl-rounds">Liczba pytań</span><div class="chips" id="set-rounds"></div></div>
       <div class="setting"><span class="label" id="lbl-time">Czas na odpowiedź (s)</span><div class="chips" id="set-time"></div></div>
+      <div class="setting"><span class="label">Widoczność lobby</span><div class="chips" id="set-vis"></div><p class="modedesc" id="vis-desc" style="min-height:0"></p></div>
       <div class="setting" id="row-wins" hidden><span class="label">Wygrane rundy w pojedynku</span><div class="chips" id="set-wins"></div></div>
       <div class="setting"><span class="label">Maksymalna liczba graczy</span><div class="chips" id="set-maxp"></div></div>
       <div class="setting" id="row-hearts" hidden><span class="label">Liczba serc na gracza</span><div class="chips" id="set-hearts"></div></div>
@@ -3020,6 +3038,113 @@ async function roomApi() {
   if (!ROOMAPI && window.Peer) ROOMAPI = peerApi();
   return ROOMAPI;
 }
+/* ============================================================
+   KATALOG LOBBY (lista publicznych + wyszukiwanie prywatnych po nicku hosta)
+   - w claude.ai: obecność (presence) w wspólnym pokoju
+   - na zwykłym hostingu: publiczny kanał ntfy.sh (SSE + POST)
+   ============================================================ */
+const NTFY = 'https://ntfy.sh/krilldive-lobbies-7f3a91';
+const DIR_TTL = 55000;
+const ALPH = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const DIR = { recs: new Map(), backend: '', pubRec: null, onChange: null };
+function cyrb53(str, seed) {
+  let h1 = 0xdeadbeef ^ (seed || 0), h2 = 0x41c6ce57 ^ (seed || 0);
+  for (let i = 0; i < str.length; i++) { const ch = str.charCodeAt(i); h1 = Math.imul(h1 ^ ch, 2654435761); h2 = Math.imul(h2 ^ ch, 1597334677); }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+}
+const nameKey = n => cyrb53(norm(n) + '|krill', 7).toString(36);
+function encCode(code, name) { let o = ''; for (let i = 0; i < code.length; i++) o += ALPH[(ALPH.indexOf(code[i]) + cyrb53(norm(name) + '|' + i, 11) % 32) % 32]; return o; }
+function decCode(e, name) { let o = ''; for (let i = 0; i < e.length; i++) o += ALPH[(ALPH.indexOf(e[i]) - cyrb53(norm(name) + '|' + i, 11) % 32 + 64) % 32]; return o; }
+function dirKey(r) { return r.t === 'p' ? 'p:' + r.c : 'n:' + r.k + ':' + r.e; }
+function dirNotify() { if (DIR.onChange) { try { DIR.onChange(); } catch (e) {} } }
+function dirAdd(r, ts) {
+  if (!r || typeof r !== 'object') return;
+  if (r.t === 'x') { DIR.recs.delete('p:' + r.c); DIR.recs.delete('n:' + r.k + ':' + r.e); dirNotify(); return; }
+  if (r.t === 'p' && typeof r.c === 'string' && r.c.length === 5) DIR.recs.set(dirKey(r), { r, ts });
+  else if (r.t === 'n' && typeof r.k === 'string' && typeof r.e === 'string' && r.e.length === 5) DIR.recs.set(dirKey(r), { r, ts });
+  else return;
+  dirNotify();
+}
+function dirPrune() {
+  const now = Date.now(); let ch = false;
+  for (const [k, v] of DIR.recs) if (now - v.ts > DIR_TTL) { DIR.recs.delete(k); ch = true; }
+  if (ch) dirNotify();
+}
+function dirPublicList() {
+  const out = [];
+  for (const { r } of DIR.recs.values()) {
+    if (r.t !== 'p' || r.c === CODE) continue;
+    out.push({ code: r.c, host: String(r.h || '?').slice(0, 14), mode: r.m, n: r.n | 0, x: r.x | 0, pl: (r.pl || []).map(x => String(x).slice(0, 14)) });
+  }
+  return out.sort((a, b) => b.n - a.n);
+}
+function dirFindByName(name) {
+  const q = norm(name), out = [], seen = new Set();
+  if (!q) return out;
+  for (const { r } of DIR.recs.values()) {
+    if (r.t === 'p' && r.c !== CODE && norm(r.h) === q && !seen.has(r.c)) { seen.add(r.c); out.push({ code: r.c, host: r.h, pub: 1 }); }
+    else if (r.t === 'n' && r.k === nameKey(name)) { const c = decCode(r.e, name); if (!seen.has(c)) { seen.add(c); out.push({ code: c, host: name, pub: 0 }); } }
+  }
+  return out;
+}
+function dirStart() {
+  if (DIR.backend) return;
+  const api = ROOMAPI;
+  if (api && typeof api.presence === 'function' && typeof api.peers === 'function' && typeof api.onPeers === 'function') {
+    DIR.backend = 'room';
+    const sync = () => {
+      DIR.recs.clear(); const now = Date.now();
+      let peers = []; try { peers = api.peers() || []; } catch (e) {}
+      for (const pr of peers) { if (pr.isMe) continue; const kd = pr.presence && pr.presence.kd; if (kd && typeof kd === 'object') { if (kd.t === 'p' && kd.c) DIR.recs.set(dirKey(kd), { r: kd, ts: now }); else if (kd.t === 'n' && kd.k && kd.e) DIR.recs.set(dirKey(kd), { r: kd, ts: now }); } }
+      dirNotify();
+    };
+    try { api.onPeers(sync); } catch (e) {}
+    sync();
+  } else if (typeof EventSource !== 'undefined' && typeof fetch === 'function') {
+    DIR.backend = 'ntfy';
+    try {
+      const es = new EventSource(NTFY + '/sse?since=1m');
+      es.onmessage = ev => {
+        try {
+          const m = JSON.parse(ev.data);
+          if (m.event && m.event !== 'message') return;
+          const r = JSON.parse(m.message);
+          const ts = Math.min(Date.now(), (m.time || 0) * 1000 || Date.now());
+          if (Date.now() - ts > DIR_TTL) return;
+          dirAdd(r, ts);
+        } catch (e) {}
+      };
+      es.onerror = () => {};
+    } catch (e) { DIR.backend = ''; }
+    setInterval(dirPrune, 5000);
+  }
+}
+function dirSend(rec) {
+  if (DIR.backend === 'room') { try { ROOMAPI.presence({ kd: rec }); } catch (e) {} }
+  else if (DIR.backend === 'ntfy') { try { fetch(NTFY, { method: 'POST', body: JSON.stringify(rec) }).catch(() => {}); } catch (e) {} }
+}
+let dirLastSig = '', dirLastAt = 0;
+function dirPublishLobby() {
+  if (!isHost || !G || G.ph !== 'lobby' || !ROOM || !DIR.backend) return;
+  const host = G.players.find(p => p.id === G.hostPid), name = host ? host.name : '?';
+  const rec = G.pub
+    ? { v: 1, t: 'p', c: G.code, h: name, m: G.mode, n: G.players.length, x: G.maxP, pl: G.players.map(p => p.name).slice(0, 8) }
+    : { v: 1, t: 'n', k: nameKey(name), e: encCode(G.code, name) };
+  const sig = JSON.stringify(rec), now = Date.now();
+  if (sig === dirLastSig && now - dirLastAt < 18000) return;
+  if (sig !== dirLastSig && now - dirLastAt < 2500) return;
+  if (DIR.pubRec && DIR.pubRec.t !== rec.t) dirRemoveLobby(true);
+  dirLastSig = sig; dirLastAt = now; DIR.pubRec = rec;
+  dirSend(rec);
+}
+function dirRemoveLobby(keepSig) {
+  const r = DIR.pubRec; if (!r) return;
+  DIR.pubRec = null; if (!keepSig) { dirLastSig = ''; dirLastAt = 0; }
+  if (DIR.backend === 'room') { try { ROOMAPI.presence({ kd: null }); } catch (e) {} }
+  else if (DIR.backend === 'ntfy') dirSend({ v: 1, t: 'x', c: r.c || '', k: r.k || '', e: r.e || '' });
+}
 function genCode() { const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 5; i++) s += c[rnd(c.length)]; return s; }
 const roomName = code => 'kd-' + code.toLowerCase();
 function cleanName(n) { return String(n || '').replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, 14) || 'Nurek'; }
@@ -3038,6 +3163,7 @@ function netSend(d) {
   });
 }
 function teardown() {
+  dirRemoveLobby();
   offs.forEach(f => { try { f(); } catch (e) {} }); offs = [];
   if (ROOM) { try { ROOM.leave(); } catch (e) {} ROOM = null; }
   clearTimeout(joinTimer);
@@ -3057,7 +3183,7 @@ function addPlayer(id, name, bot, peer) {
 }
 function hostCreate(name) {
   const code = CODE;
-  G = { code, ph: 'lobby', mode: 'd', maxP: 4, wins: 2, bk: null, cur: null, duel: null, rn: [], dn: '', bids: {}, bidOrder: [], bidder: null, need: 0, got: [], lres: null, mb: 8, botCan: false, sa: '', sotier: '', sg: {}, sres: null, hearts: 3, chooser: null, target: null, thr: 10, x2: false, tt: 0, ra: null, lastCh: null, ansIn: false, botAns: null, holder: null, used: [], passes: 0, xo: null, botAt: 0, rounds: 8, time: 30, players: [], qs: [], qi: -1, tEnd: 0, nextAt: 0, hostPid: ME.pid, res: null, deep: '', ex: [], best: null };
+  G = { code, ph: 'lobby', mode: 'd', maxP: 4, wins: 2, pub: false, bk: null, cur: null, duel: null, rn: [], dn: '', bids: {}, bidOrder: [], bidder: null, need: 0, got: [], lres: null, mb: 8, botCan: false, sa: '', sotier: '', sg: {}, sres: null, hearts: 3, chooser: null, target: null, thr: 10, x2: false, tt: 0, ra: null, lastCh: null, ansIn: false, botAns: null, holder: null, used: [], passes: 0, xo: null, botAt: 0, rounds: 8, time: 30, players: [], qs: [], qi: -1, tEnd: 0, nextAt: 0, hostPid: ME.pid, res: null, deep: '', ex: [], best: null };
   addPlayer(ME.pid, name, false, null);
   isHost = true;
 }
@@ -3071,7 +3197,7 @@ function pub() {
     nl: G.ph === 'r' || G.ph === 'x' || G.ph === 'rt' || G.ph === 'or' || G.ph === 'lr' || G.ph === 'br' ? Math.max(0, G.nextAt - now) : 0,
     res: G.ph === 'r' ? G.res : null, deep: G.ph === 'r' || G.ph === 'x' || G.ph === 'rt' ? G.deep : '', ex: G.ph === 'r' || G.ph === 'x' || G.ph === 'rt' ? G.ex : [],
     best: G.ph === 'f' ? G.best : null, hp: G.hostPid,
-    mp: G.maxP, W: G.wins,
+    mp: G.maxP, W: G.wins, vis: G.pub ? 1 : 0,
     dd: G.mode === 'p' && G.duel && (G.ph === 'q' || G.ph === 'r' || G.ph === 'br') ? G.duel : null,
     dl: G.mode === 'p' && G.cur ? { r: G.rn[G.bk.r], a: G.cur.a, b: G.cur.b, sa: G.cur.sa, sb: G.cur.sb, W: G.wins, w: G.cur.w || '', fin: G.bk.r === G.rn.length - 1 ? 1 : 0 } : null,
     bk: G.mode === 'p' && G.ph === 'br' ? G.bk.rounds.map(r => r.map(m => [m.a || '', m.b || '', m.w || '', m.sa, m.sb])) : null,
@@ -3169,6 +3295,7 @@ function pickQuestions(n) {
 }
 function hostStart() {
   if (!G || G.ph !== 'lobby') return;
+  dirRemoveLobby();
   if (G.mode === 'p') {
     G.qs = pickQuestions(40); G.qi = -1; G.best = null; G.bk = null; G.cur = null; G.duel = null; G.rounds = 999;
     G.players.forEach(p => { p.total = 0; p.booms = 0; p.lives = 0; p.elim = -1; p.again = false; });
@@ -3548,6 +3675,7 @@ function hostTick(now) {
     if (g !== p.gone) { p.gone = g; dirty = true; }
   }
   if (G.ph === 'lobby') {
+    dirPublishLobby();
     const n = G.players.length;
     G.players = G.players.filter(p => !(p.gone && p.id !== ME.pid));
     if (G.players.length !== n) dirty = true;
@@ -3656,25 +3784,53 @@ $('#btn-host').addEventListener('click', async () => {
   if (!ROOM) { G.players.length < 4 && addBot(); }
   changed();
 });
-$('#btn-join').addEventListener('click', async () => {
-  const name = readName();
-  const code = $('#code').value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  if (code.length !== 5) { toast('Kod ma 5 znaków.'); return; }
+async function startJoin(code) {
   const api = await roomApi();
   if (!api) { toast('Gra online jest niedostępna w tym widoku. Możesz założyć grę z botami.'); return; }
+  readName();
   CODE = code; isHost = false; S = null; hostPeer = null;
   view = 'joining'; render();
   try { await enterRoom(code, false); } catch (e) { toHome(e && e.type === 'peer-unavailable' ? 'Nie znaleziono gry o kodzie ' + code + '. Sprawdź kod i czy host ma otwartą stronę.' : 'Nie udało się połączyć z hostem (' + ((e && e.type) || 'błąd sieci') + '). Spróbuj na tej samej sieci Wi‑Fi albo za chwilę ponownie.'); return; }
   const hello = () => { if (view === 'joining' || (view === 'room' && !isHost)) netSend({ t: 'h', pid: ME.pid, n: ME.name }); };
   hello();
   joinTimer = setTimeout(() => { if (view === 'joining') toHome('Połączono, ale host nie przyjął Cię: pokój jest pełny albo gra już trwa.'); }, 7000);
+}
+$('#btn-join').addEventListener('click', async () => {
+  const raw = $('#code').value.trim();
+  if (!raw) { toast('Wpisz kod lobby albo nick hosta, albo wybierz lobby z listy.'); return; }
+  await roomApi(); dirStart();
+  const found = dirFindByName(raw);
+  if (found.length === 1) { startJoin(found[0].code); return; }
+  if (found.length > 1) { lobbyFilter = found; openBrowse(); toast('Kilku hostów o tym nicku. Wybierz lobby z listy.'); return; }
+  const up = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (up.length === 5) { startJoin(up); return; }
+  toast('Nie znaleziono lobby hosta „' + raw + '”. Poproś hosta o kod.');
 });
+let lobbyFilter = null;
+function openBrowse() { view = 'browse'; render(); }
+$('#btn-browse').addEventListener('click', async () => { lobbyFilter = null; await roomApi(); dirStart(); openBrowse(); });
+$('#btn-lobbies-back').addEventListener('click', () => { lobbyFilter = null; view = 'home'; render(); });
+function updLobbies() {
+  const box = $('#lobbylist'); box.textContent = '';
+  const note = $('#lobbies-note');
+  const list = lobbyFilter ? lobbyFilter.map(f => ({ code: f.code, host: f.host, mode: null, n: 0, x: 0, pl: [] })) : dirPublicList();
+  if (!DIR.backend) { box.append(h('div', { class: 'empty-state card', text: 'Lista lobby jest niedostępna w tym widoku. Dołącz kodem albo nickiem hosta.' })); note.textContent = ''; return; }
+  if (!list.length) box.append(h('div', { class: 'empty-state card', text: 'Nie ma teraz żadnych publicznych lobby. Załóż własne albo wpisz kod lub nick hosta prywatnego lobby.' }));
+  list.forEach(l => {
+    const full = l.x && l.n >= l.x;
+    box.append(h('div', { class: 'lobbyrow' },
+      h('div', { class: 'top' }, h('span', { class: 'host', text: l.host }), l.mode && MODES[l.mode] ? h('span', { class: 'tag', text: MODES[l.mode].n }) : null, l.x ? h('span', { class: 'cnt', text: l.n + '/' + l.x }) : h('span', { class: 'cnt', text: 'kod ' + l.code })),
+      l.pl.length ? h('div', { class: 'names', text: l.pl.join(', ') }) : h('div', { class: 'names' }),
+      h('button', { class: 'btn primary small', type: 'button', disabled: !!full, text: full ? 'Pełne' : 'Dołącz', onclick: () => { lobbyFilter = null; startJoin(l.code); } })));
+  });
+  note.textContent = lobbyFilter ? '' : 'Lista odświeża się na bieżąco. Prywatnego lobby tu nie zobaczysz.';
+}
 $('#btn-cancel-join').addEventListener('click', () => toHome());
-$('#code').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
 $('#code').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btn-join').click(); });
 $('#name').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btn-host').click(); });
 
 function leave() {
+  dirRemoveLobby();
   if (isHost) netSend({ t: 'e' }); else if (ROOM) netSend({ t: 'b', pid: ME.pid });
   view = 'home'; S = null; render();            // ekran startowy od razu
   setTimeout(teardown, 250);                    // pokój zamykamy chwilę później, żeby wiadomość zdążyła wyjść
@@ -3771,10 +3927,10 @@ $('#ans').addEventListener('input', () => {
 /* ============================================================
    RENDER
    ============================================================ */
-const SCREENS = ['home', 'joining', 'lobby', 'play', 'bomb', 'quiz', 'sonar', 'bid', 'bracket', 'reveal', 'final'];
+const SCREENS = ['home', 'joining', 'lobbies', 'lobby', 'play', 'bomb', 'quiz', 'sonar', 'bid', 'bracket', 'reveal', 'final'];
 let lastScreen = '';
 function current() {
-  if (!S || view !== 'room') return view === 'joining' ? 'joining' : 'home';
+  if (!S || view !== 'room') return view === 'joining' ? 'joining' : view === 'browse' ? 'lobbies' : 'home';
   return { lobby: 'lobby', q: 'play', r: 'reveal', f: 'final', b: 'bomb', x: 'bomb', c: 'quiz', a: 'quiz', rt: 'quiz', o: 'sonar', or: 'sonar', v: 'bid', w: 'bid', lr: 'bid', br: 'bracket' }[S.ph] || 'home';
 }
 function render() {
@@ -3788,7 +3944,8 @@ function render() {
   if (cur !== 'quiz') { quizRound = -2; quizKey = ''; }
   if (cur !== 'sonar') { sonarKey = ''; }
   if (cur !== 'bid') { bidKey = ''; }
-  if (cur === 'lobby') updLobby();
+  if (cur === 'lobbies') updLobbies();
+  else if (cur === 'lobby') updLobby();
   else if (cur === 'play') updPlay();
   else if (cur === 'reveal') updReveal();
   else if (cur === 'bomb') updBomb();
@@ -3820,10 +3977,12 @@ function updDim(cur) { setDim(cur === 'play' || cur === 'final' || cur === 'lobb
       h('b', { class: 'mono', text: t.pts + ' pkt' })));
   }
   roomApi().then(api => {
+    dirStart();
+    DIR.onChange = () => { if (view === 'browse') updLobbies(); const c = dirPublicList().length; $('#btn-browse').textContent = c ? 'Pokaż lobby (' + c + ')' : 'Pokaż lobby'; };
     const n = $('#net');
     n.classList.toggle('on', !!api);
     n.querySelector('span').textContent = api
-      ? 'Gra online dostępna. Host zakłada pokój, reszta dołącza kodem.'
+      ? 'Gra online dostępna. Host zakłada pokój, reszta dołącza z listy, kodem albo nickiem hosta.'
       : 'Gra online niedostępna w tym widoku. Możesz zagrać z botami jako host.';
   });
 })();
@@ -3831,7 +3990,7 @@ function updDim(cur) { setDim(cur === 'play' || cur === 'final' || cur === 'lobb
 /* LOBBY */
 function updLobby() {
   $('#code-big').textContent = S.c;
-  guard('lobby', [S.pl, S.R, S.T, S.md, S.hm, S.mp, S.W, isHost], () => {
+  guard('lobby', [S.pl, S.R, S.T, S.md, S.hm, S.mp, S.W, S.vis, isHost], () => {
     const mc = MODES[S.md] || MODES.d;
     $('#pl-count').textContent = S.pl.length + '/' + S.mp;
     const ul = $('#pl-list'); ul.textContent = '';
@@ -3853,6 +4012,9 @@ function updLobby() {
     const modes = $('#set-mode'); modes.textContent = '';
     Object.keys(MODES).forEach(id => modes.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(S.md === id), disabled: !isHost, text: MODES[id].n, style: 'font-family:var(--f-display)', onclick: () => { if (G.mode !== id) setMode(id); } })));
     $('#mode-desc').textContent = mc.desc;
+    const vis = $('#set-vis'); vis.textContent = '';
+    [[0, 'Prywatne'], [1, 'Publiczne']].forEach(([v, label]) => vis.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String((S.vis | 0) === v), disabled: !isHost, text: label, style: 'font-family:var(--f-display)', onclick: () => { G.pub = !!v; changed(); } })));
+    $('#vis-desc').textContent = S.vis ? 'Lobby widać na liście „Pokaż lobby”: nick hosta, tryb, liczbę i nazwy graczy.' : 'Lobby nie ma na liście. Znajomi dołączą kodem albo wpisując Twój nick.';
     $('#lbl-rounds').parentElement.hidden = !!mc.noRounds;
     $('#lbl-rounds').textContent = mc.rl || 'Liczba pytań';
     $('#lbl-time').textContent = mc.tl;
